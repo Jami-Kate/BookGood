@@ -1,4 +1,4 @@
 # BookGood
-By: Jami Biddle
+By: Jami Biddle | Edward Delmonico
 
 What if book... was good
