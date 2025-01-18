@@ -1,62 +1,93 @@
 import requests
 from bs4 import BeautifulSoup
-import pandas as pd
+import re
 
-# Prompt user for their sign and lowercase input
 sign = input("what's yer sign ").lower()
 
-# Convert sign to a number for insertion into the horoscope.com url
-# Set sign to 0 if input is not recognized
 if sign == 'aries':
-    sign = 1
+    signNumber = 1
 elif sign == 'taurus':
-    sign = 2
+    signNumber = 2
 elif sign == 'gemini':
-    sign = 3
+    signNumber = 3
 elif sign == 'cancer':
-    sign = 4
+    signNumber = 4
 elif sign == 'leo':
-    sign = 5
+    signNumber = 5
 elif sign == 'virgo':
-    sign = 6
+    signNumber = 6
 elif sign == 'libra':
-    sign = 7
+    signNumber = 7
 elif sign == 'scorpio':
-    sign = 8
+    signNumber = 8
 elif sign == 'sagittarius':
-    sign = 9
+    signNumber = 9
 elif sign == 'capricorn':
-    sign = 10
+    signNumber = 10
 elif sign == 'aquarius':
-    sign = 11
+    signNumber = 11
 elif sign == 'pisces':
-    sign = 12
+    signNumber = 12
 else:
-    sign = 0
-
-# If sign is not 0, navigate to appropriate url and scrape details
-if sign == 0:
     print('come back when you can spell your sign right, jeez')
-else:
-    url = f'https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign={sign}'
+    exit() # added this so that the script stops running if there's a typo
 
-    response = requests.get(url)
+url = f'https://www.horoscope.com/us/horoscopes/general/horoscope-general-daily-today.aspx?sign={signNumber}'
+response = requests.get(url)
+soup = BeautifulSoup(response.content, 'html.parser')
 
-    soup = BeautifulSoup(response.content, 'html.parser')
-# Scrape sign
-    title = soup.h1
-# Scrape today's date
-    date = soup.strong
-# Scrape today's horoscope text
-    horoscope = date.next_sibling
 # Scrape traits of sign
-    traits = soup.find('p', class_ = 'italicize')
+traits = soup.find('p', class_ = 'italicize')
+
+# Scrape sign
+title = soup.h1
+
+# Scrape today's date
+date = soup.strong
+
+# Scrape today's horoscope text
+horoscope = date.next_sibling
+
+# Scrape traits of sign
+traits = soup.find('p', class_ = 'italicize')
 
 # Print horoscope and strip text of html markup
-    print()
-    print(f'~~~{title.text.strip()}~~~')
-    print(traits.text.strip())
-    print(date.text.strip())
-    print(horoscope.text.strip().replace('- ', ''))
-    print()
-    
+print()
+print(f'~~~{title.text.strip()}~~~')
+print(traits.text.strip())
+print(date.text.strip())
+print(horoscope.text.strip().replace('- ', ''))
+print()
+
+# CELEBRITY PART STARTS HERE (SONJA)
+print(f"But wait! There's more. Did you know these famous people are also {sign}?")    
+url = f"https://www.horoscope.com/celebrities/{sign}/"
+response = requests.get(url)
+soup = BeautifulSoup(response.content, 'html.parser')
+intro = soup.find('p').get_text()
+
+names = []
+h3_tags = soup.find_all('h3')
+for h3 in h3_tags:
+    a_tag = h3.find('a')  # Find the <a> tag within the <h3>
+    names.append(a_tag.get_text())  # Get the text content of the <a> tag
+     
+birthdays = []
+divs = soup.find_all('div', class_="module-celebrities-item-detail")
+for div in divs:
+    birthdays.append(div.get_text(strip=True))  
+
+texts = []
+divs = soup.find_all('div', class_='module-celebrities-item-content') 
+for div in divs: # Extract text from each <div>
+    text = div.get_text(strip=True)  
+    text = re.sub(r'Photo:.*$', '', text).strip() # Remove the mention of "Photo by X"
+    firstSign = text.find(f"{sign}") # Look for first mention of {sign} and cuts everything before that 
+    if firstSign != -1: # if mention of {sign} was found 
+        texts.append(text[firstSign + len(f"{sign}"):].strip()) # Removes the first mention of {sign}
+
+print(intro)
+print("")
+for i in range(len(names)):
+    print(f"Name: {names[i]} \nBirthday: {birthdays[i]} \n{texts[i]}")
+    print("---"*50)
