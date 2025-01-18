@@ -2,8 +2,11 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 
+# Prompt user for their sign and lowercase input
 sign = input("what's yer sign ").lower()
 
+# Convert sign to a number for insertion into the horoscope.com url
+# Set sign to 0 if input is not recognized
 if sign == 'aries':
     sign = 1
 elif sign == 'taurus':
@@ -31,6 +34,7 @@ elif sign == 'pisces':
 else:
     sign = 0
 
+# If sign is not 0, navigate to appropriate url and scrape details
 if sign == 0:
     print('come back when you can spell your sign right, jeez')
 else:
@@ -39,15 +43,16 @@ else:
     response = requests.get(url)
 
     soup = BeautifulSoup(response.content, 'html.parser')
-
+# Scrape sign
     title = soup.h1
-
+# Scrape today's date
     date = soup.strong
-
+# Scrape today's horoscope text
     horoscope = date.next_sibling
-
+# Scrape traits of sign
     traits = soup.find('p', class_ = 'italicize')
 
+# Print horoscope and strip text of html markup
     print()
     print(f'~~~{title.text.strip()}~~~')
     print(traits.text.strip())
