@@ -91,3 +91,34 @@ print("")
 for i in range(len(names)):
     print(f"Name: {names[i]} \nBirthday: {birthdays[i]} \n{texts[i]}")
     print("---"*50)
+
+
+# YEARLY HOROSCOPE HERE (JAMI)
+
+yearAns = input("2025 just started, would you like your 2025 horoscope? input y for yes or n for no: ").lower()
+
+if yearAns == "y":
+	url = f'https://www.horoscope.com/us/horoscopes/yearly/2025-horoscope-{sign}.aspx'
+	response = requests.get(url)
+	soup = BeautifulSoup(response.content, 'html.parser')
+	title = soup.find('h2')
+	#print the title but nicely!
+	print()
+	print('~~~~', end = "")
+	print(title.text.strip(), end = "")
+	print('~~~~')
+	print()
+	#find the actual horoscope bit
+	meat = title.find_next('p')
+	#removes this add they stick in the middle of the horoscope
+	meat.find_next('i').decompose()
+	#separates the section into paragraphs around where there are the <br>'s for better printing formatting
+	meat = list(title.find_next_sibling('p').stripped_strings)
+	for a in meat:
+		#this if statement means it doesnt print the lil starts that go around the ad we removed
+		if (a != '⭐'):
+			print(a)
+			print()	
+#buhbye!
+else:
+    print('Alright, goodbye!')
