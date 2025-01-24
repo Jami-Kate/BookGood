@@ -5,6 +5,19 @@ documents = ["This is a silly example",
              "Nothing to see here",
              "This is a great and long example"]
 
+data = open("wikiData.txt", "r")
+#begin the documents array to store the articles
+documents2 = [""]
+i = 0
+
+for line in data:
+    #print all lines except the article tags
+    if line != "</article>\n":
+        documents2[i] = documents2[i] + line
+    else:
+        i = i + 1
+        documents2.append("")
+
 cv = CountVectorizer(lowercase=True, binary=True)
 sparse_matrix = cv.fit_transform(documents)
 
