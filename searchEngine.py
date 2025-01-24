@@ -119,6 +119,9 @@ for i, doc_idx in enumerate(hits_list):
 usr_input = input("What are we searching for today? Enter your query or leave the field blank to quit ")
 
 while usr_input:
-    test_query(usr_input)
+    try:
+        test_query(usr_input)
+    except:
+        print(f"No results for {usr_input}!") # This'll prevent the engine from crashing but it's not desperately descriptive
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
