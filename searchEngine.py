@@ -116,9 +116,9 @@ for i, doc_idx in enumerate(hits_list):
     print("Matching doc #{:d}: {:s}".format(i, documents[doc_idx]))
 
 
-usr_input = input(" What are we searching for today? Enter your query or leave the field blank to quit")
+usr_input = input("What are we searching for today? Enter your query or leave the field blank to quit ")
 
 while usr_input:
     test_query(usr_input)
-    usr_input = input("Anything else? Enter another query or leave the field blank to quit")
+    usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
