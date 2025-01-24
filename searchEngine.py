@@ -8,6 +8,7 @@ documents = ["This is a silly example",
 cv = CountVectorizer(lowercase=True, binary=True)
 sparse_matrix = cv.fit_transform(documents)
 
+
 print("Term-document matrix: (?)\n")
 print(sparse_matrix)
 
@@ -61,6 +62,7 @@ print("nothing occurs in:                  ", td_matrix[t2i["nothing"]])
 print("( example AND NOT this ) OR nothing:", 
       (td_matrix[t2i["example"]] & (1 - td_matrix[t2i["this"]])) | td_matrix[t2i["nothing"]])
 
+
 # Operators and/AND, or/OR, not/NOT become &, |, 1 -
 # Parentheses are left untouched
 # Everything else is interpreted as a term and fed through td_matrix[t2i["..."]]
@@ -81,6 +83,7 @@ def test_query(query):
     print("Rewritten:", rewrite_query(query))
     print("Matching:", eval(rewrite_query(query))) # Eval runs the string as a Python command
     print()
+
 
 test_query("example AND NOT nothing")
 test_query("NOT example OR great")
@@ -122,6 +125,12 @@ while usr_input:
     try:
         test_query(usr_input)
     except:
-        print(f"No results for {usr_input}!") # This'll prevent the engine from crashing but it's not desperately descriptive
+        print(f"Uh oh!") # This'll prevent the engine from crashing but it's not desperately descriptive
+        for term in usr_input.split():
+            try:
+                test_query(term)
+            except:
+                print(f"nothing found for {term}!")
+
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
