@@ -122,6 +122,6 @@ while usr_input:
     try:
         test_query(usr_input)
     except:
-        print(f"No results for {usr_input}!")
+        print(f"No results for {usr_input}!") # This'll prevent the engine from crashing but it's not desperately descriptive
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
