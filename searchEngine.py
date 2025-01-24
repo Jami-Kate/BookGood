@@ -4,7 +4,7 @@ documents = ["This is a silly example",
              "A better example",
              "Nothing to see here",
              "This is a great and long example"]
-
+             
 data = open("wikiData.txt", "r")
 #begin the documents array to store the articles
 documents2 = [""]
