@@ -72,27 +72,7 @@ def rewrite_token(t):
 usr_input = input("What are we searching for today? Enter your query or leave the field blank to quit ")
 
 while usr_input:
-    try:
-        print(test_query(usr_input.lower()))
-    except:
-        print(f"Uh oh!") # This'll prevent the engine from crashing but it's not desperately sophisticated
-        all_terms = usr_input.split()
-        problem_terms = []
-        prev = ''
-        for term in all_terms:
-            if term not in list(d.keys()):
-                try:
-                    if prev.lower() == 'not':
-
-                        term = prev + " " + term
-                    print(f"trying {term}")
-                    print(eval(rewrite_query(term)))
-                except:
-                    problem_terms.append(term)
-            prev = term
-        if problem_terms:
-            print(f"Nothing found for {problem_terms}, I'm afraid")
-
+    handle_errors(test_query, usr_input.lower())
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
 
