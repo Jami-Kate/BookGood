@@ -1,16 +1,19 @@
 from config import d
 
+# Processes the input by putting it in lowercase, then adds a space after an open-paren and before a close-paren
+def process_input(input):
+    return input.lower().replace("(", "( ").replace(")", " )")
+
+# Lists all search terms for which there is no result
 def list_problem_terms(problem_terms):
     print("I'm afraid we've found no results for the following:")
     for problem_term in problem_terms:
         print(f"---{problem_term}")
 
-def group_parentheticals(query):
-    return 1
-
+# Tries the search query. If unsuccessful, attempts to break query into chunks and search each chunk individually
 def handle_errors(search, terms):
     try:
-        search(terms)
+        search(process_input(terms))
     except:
         print(f"Uh oh, there's a problem with your query!")
         all_terms = terms.split()
@@ -29,3 +32,5 @@ def handle_errors(search, terms):
                 prev = term
         else: problem_terms.append(terms)
         list_problem_terms(problem_terms)
+
+print(process_input("Let's process (a (test sentence) with (parens))"))
