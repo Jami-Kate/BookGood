@@ -1,5 +1,5 @@
 from sklearn.feature_extraction.text import CountVectorizer
-from err import handle_errors
+from err import handle_errors, process_input
 from config import d
 import re
     
@@ -68,7 +68,7 @@ def rewrite_token(t):
 usr_input = input("What are we searching for today? Enter your query or leave the field blank to quit ")
 
 while usr_input:
-    handle_errors(test_query, usr_input)
+    handle_errors(test_query, process_input(usr_input))
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
 

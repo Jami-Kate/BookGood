@@ -13,7 +13,7 @@ def list_problem_terms(problem_terms):
 # Tries the search query. If unsuccessful, attempts to break query into chunks and search each chunk individually
 def handle_errors(search, terms):
     try:
-        search(process_input(terms))
+        search(terms)
     except:
         print(f"Uh oh, there's a problem with your query!")
         all_terms = terms.split()
