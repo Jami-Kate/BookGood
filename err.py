@@ -32,5 +32,3 @@ def handle_errors(search, terms):
                 prev = term
         else: problem_terms.append(terms)
         list_problem_terms(problem_terms)
-
-print(process_input("Let's process (a (test sentence) with (parens))"))
