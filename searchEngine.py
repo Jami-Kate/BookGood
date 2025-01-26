@@ -136,14 +136,25 @@ usr_input = input("What are we searching for today? Enter your query or leave th
 
 while usr_input:
     try:
-        test_query(usr_input)
+        print(eval(rewrite_query(usr_input)))
     except:
-        print(f"Uh oh!") # This'll prevent the engine from crashing but it's not desperately descriptive
-        for term in usr_input.split():
-            try:
-                test_query(term)
-            except:
-                print(f"nothing found for {term}!")
+        print(f"Uh oh!") # This'll prevent the engine from crashing but it's not desperately sophisticated
+        all_terms = usr_input.split()
+        problem_terms = []
+        prev = ''
+        for term in all_terms:
+            if term not in list(d.keys()):
+                try:
+                    if prev.lower() == 'not':
+                        term = prev + " " + term
+                    print(f"trying {term}")
+                    print(eval(rewrite_query(term)))
+                except:
+                    problem_terms.append(term)
+            prev = term
+        if problem_terms:
+            print(f"Nothing found for {problem_terms}, I'm afraid")
 
     usr_input = input("Anything else? Enter another query or leave the field blank to quit ")
 print("See you later")
+
