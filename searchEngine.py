@@ -1,5 +1,6 @@
 from sklearn.feature_extraction.text import CountVectorizer
 from err import handle_errors
+from config import d
 import re
     
 ### GETTING AND ORGANIZING DATA ###
@@ -42,11 +43,6 @@ td_matrix = dense_matrix.T   # .T transposes the matrix
 sparse_td_matrix = sparse_matrix.T.tocsr()
 terms = cv.get_feature_names_out()
 t2i = cv.vocabulary_  # shorter notation: t2i = term-to-index
-
-d = {"and": "&", "AND": "&",
-     "or": "|", "OR": "|",
-     "not": "1 -", "NOT": "1 -",
-     "(": "(", ")": ")"}          # operator replacements
 
 def rewrite_token(t):
     return d.get(t, 'td_matrix[t2i["{:s}"]]'.format(t)) # Can you figure out what happens here?

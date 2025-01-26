@@ -1,7 +1,4 @@
-d = {"and": "&", "AND": "&",
-     "or": "|", "OR": "|",
-     "not": "1 -", "NOT": "1 -",
-     "(": "(", ")": ")"}          # operator replacements
+from config import d
 
 def list_problem_terms(problem_terms):
     print("I'm afraid we've found no results for the following:")
