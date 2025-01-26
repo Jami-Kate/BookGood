@@ -5,11 +5,14 @@ def list_problem_terms(problem_terms):
     for problem_term in problem_terms:
         print(f"---{problem_term}")
 
+def group_parentheticals(query):
+    return 1
+
 def handle_errors(search, terms):
     try:
         search(terms)
     except:
-        print(f"There's a problem with your query '{terms}'!")
+        print(f"Uh oh, there's a problem with your query!")
         all_terms = terms.split()
         problem_terms = []
         prev = ''
