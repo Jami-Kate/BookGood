@@ -1,4 +1,5 @@
 from sklearn.feature_extraction.text import CountVectorizer
+from err import handle_errors
 import re
     
 ### GETTING AND ORGANIZING DATA ###
@@ -72,7 +73,7 @@ usr_input = input("What are we searching for today? Enter your query or leave th
 
 while usr_input:
     try:
-        print(eval(rewrite_query(usr_input.lower())))
+        print(test_query(usr_input.lower()))
     except:
         print(f"Uh oh!") # This'll prevent the engine from crashing but it's not desperately sophisticated
         all_terms = usr_input.split()
@@ -82,6 +83,7 @@ while usr_input:
             if term not in list(d.keys()):
                 try:
                     if prev.lower() == 'not':
+
                         term = prev + " " + term
                     print(f"trying {term}")
                     print(eval(rewrite_query(term)))
