@@ -25,12 +25,6 @@ for document in documents:
         titles.append(match[0])  # Title
         paragraphs.append(match[1])  # First paragraph
 
-# FOR TESTING #
-#print(titles) #a list of titles
-#print(len(paragraphs)) #number of paragraphs (should match the number of titles)
-#print(len(titles)) #number of titles
-#print(paragraphs[0]) #prints out first paragraph 
-
 ### VECTORIZER STARTS HERE ### 
     
 cv = CountVectorizer(lowercase=True, binary=True, token_pattern='(?u)\\b\\w+\\b') # changed token_pattern so that it counts all words containing alpha-numerical characters as tokens
@@ -59,12 +53,15 @@ def test_query(query):
     print("-----"*len(query))
     hits_matrix = eval(rewrite_query(query)) # Eval runs the string as a Python command
     hits_list = list(hits_matrix.nonzero()[1]) 
-    for doc_idx in hits_list:
+    
+    valid_hits = [idx for idx in hits_list if idx < len(titles)] # added this to make sure the hits_list and query result indices align 
+    if not valid_hits:
+        print(f"No results for {query}!\n")
+        return
+
+    for doc_idx in valid_hits: 
         print("Matching doc:", titles[doc_idx], "\n", paragraphs[doc_idx])
         print()
-
-def rewrite_token(t):
-    return d.get(t, 'sparse_td_matrix[t2i["{:s}"]].todense()'.format(t)) # Make retrieved rows dense
 
 ### USER INPUT STARTS HERE ###
 
