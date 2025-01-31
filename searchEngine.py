@@ -7,21 +7,21 @@ import re
          
 data = open("wikiData.txt", "r", encoding="utf8")
 #begin the documents array to store the articles
-documents2 = [""]
+documents = [""]
 i = 0
 
 for line in data:
     #print all lines except the article tags
     if line != "</article>\n":
-        documents2[i] = documents2[i] + line
+        documents[i] = documents[i] + line
     else:
         i = i + 1
-        documents2.append("")
+        documents.append("")
 
 titles = []
 paragraphs = []
 
-for document in documents2:
+for document in documents:
     matches = re.findall(r'<article name="(.*?)">\n(.*?)\n', document) #divide the document into articles 
     for match in matches:
         titles.append(match[0])  # Title
@@ -35,9 +35,9 @@ for document in documents2:
 
 ### VECTORIZER STARTS HERE ### 
     
-cv = CountVectorizer(lowercase=True, binary=True)
+cv = CountVectorizer(lowercase=True, binary=True, token_pattern='(?u)\\b\\w+\\b') # changed token_pattern so that it counts all words containing alpha-numerical characters as tokens
 
-sparse_matrix = cv.fit_transform(documents2)
+sparse_matrix = cv.fit_transform(documents)
 dense_matrix = sparse_matrix.todense()
 td_matrix = dense_matrix.T   # .T transposes the matrix
 sparse_td_matrix = sparse_matrix.T.tocsr()
