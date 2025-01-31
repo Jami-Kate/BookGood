@@ -1,0 +1,10 @@
+<b>What is the main idea of your application?</b>
+1. Recommends books based on user preferences 
+2. Tag-based searches
+3. Evaluates presence of tags in a book?
+
+<b>What problem does it solve?</b>
+Helps readers decide what to read next. 
+
+<b>What data would you like to index?</b>
+Book descriptions, genre, titles in similar categories 
