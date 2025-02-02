@@ -44,13 +44,13 @@ def clean_text(df):
 def vectorize_data(df):
     """Converts text into TF-IDF vectors."""
     vectorizer = TfidfVectorizer()
-    X = vectorizer.fit_transform(df["text"])
-    return vectorizer, X
+    tfidfMatrix = vectorizer.fit_transform(df["text"])
+    return vectorizer, tfidfMatrix
 
-def search_query(query, df, vectorizer, X):
+def search_query(query, df, vectorizer, tfidfMatrix):
     """Searches articles and prints the results."""
     queryVec = vectorizer.transform([query])
-    results = cosine_similarity(X, queryVec).reshape((-1,))
+    results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,))
 
     matchingIndices = np.where(results > 0.0)[0] # selecting results that are higher than 0.0
     sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] # retrieve highest values from the array
@@ -62,20 +62,20 @@ def search_query(query, df, vectorizer, X):
     for idx in sortedIndices:
         title, text = df.iloc[idx]["title"], df.iloc[idx]["text"]
         print(f"Title: {title}")
-        print(f"Text: {text}") 
+        print(f"First paragraph: {text}") 
         print(f"Similarity Score: {results[idx]:.4f}") # added this mainly to make sure the result with the highest score is at the top 
         print("-" * 80)
 
-def user_search(df, vectorizer, X):
+def user_search(df, vectorizer, tfidfMatrix):
     """Asks for user input until the user quits."""
     
     query = input("What are we searching for today? Enter your query or leave the field blank to quit:\n")
     while query:
-        search_query(query, df, vectorizer, X)
+        search_query(query, df, vectorizer, tfidfMatrix)
         query = input("Anything else? Enter another query or leave the field blank to quit:\n")
     print("See you later!")
 
 df = load_data()
 df = clean_text(df)
-vectorizer, X = vectorize_data(df)
-user_search(df, vectorizer, X)
+vectorizer, tfidfMatrix = vectorize_data(df)
+user_search(df, vectorizer, tfidfMatrix)
