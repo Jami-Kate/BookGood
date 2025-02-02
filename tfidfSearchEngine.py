@@ -19,12 +19,13 @@ def load_data(file_path="wikiData.txt"):
                 i += 1
                 documents.append("")
 
-    titles, paragraphs = [], []
+    titles = []
+    paragraphs = []
     for document in documents:
         matches = re.findall(r'<article name="(.*?)">\n(.*?)\n', document)
         for match in matches:
-            titles.append(match[0])  # Title
-            paragraphs.append(match[1])  # First paragraph
+            titles.append(match[0])  
+            paragraphs.append(match[1])  
 
     df = pd.DataFrame({"title": titles, "text": paragraphs})
     return df
@@ -36,9 +37,7 @@ def clean_text(df):
     ).content
     stopwords = set(stopwordsList.decode().splitlines())
 
-    df["text"] = df["text"].apply(lambda x: ' '.join(
-        [word for word in str(x).split() if word.lower() not in stopwords]
-    ))
+    df["text"] = df["text"].apply(lambda x: [word for word in str(x).split() if word.lower() not in stopwords])
     return df
 
 def vectorize_data(df):
@@ -50,7 +49,7 @@ def vectorize_data(df):
 def search_query(query, df, vectorizer, tfidfMatrix):
     """Searches articles and prints the results."""
     queryVec = vectorizer.transform([query])
-    results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,))
+    results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,)) 
 
     matchingIndices = np.where(results > 0.0)[0] # selecting results that are higher than 0.0
     sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] # retrieve highest values from the array
@@ -60,7 +59,8 @@ def search_query(query, df, vectorizer, tfidfMatrix):
 
     print(f"\nQuery: '{query}'\n")
     for idx in sortedIndices:
-        title, text = df.iloc[idx]["title"], df.iloc[idx]["text"]
+        title = df.iloc[idx]["title"] 
+        text = df.iloc[idx]["text"]
         print(f"Title: {title}")
         print(f"First paragraph: {text}") 
         print(f"Similarity Score: {results[idx]:.4f}") # added this mainly to make sure the result with the highest score is at the top 
