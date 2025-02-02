@@ -10,7 +10,7 @@ def load_data(file_path="wikiData.txt"):
     
     documents = [""]
     i = 0
-
+    
     with open(file_path, "r", encoding="utf8") as data:
         for line in data:
             if line != "</article>\n":
@@ -29,7 +29,6 @@ def load_data(file_path="wikiData.txt"):
     df = pd.DataFrame({"title": titles, "text": paragraphs})
     return df
 
-# Function to remove stopwords
 def clean_text(df):
     """Removes stopwords from the text column."""
     stopwordsList = requests.get(
@@ -42,14 +41,12 @@ def clean_text(df):
     ))
     return df
 
-# Function to vectorize text data
 def vectorize_data(df):
     """Converts text into TF-IDF vectors."""
     vectorizer = TfidfVectorizer()
     X = vectorizer.fit_transform(df["text"])
     return vectorizer, X
 
-# Function to search articles based on user query
 def search_query(query, df, vectorizer, X):
     """Searches articles based on cosine similarity with the query."""
     queryVec = vectorizer.transform([query])
@@ -69,7 +66,6 @@ def search_query(query, df, vectorizer, X):
         print(f"Similarity Score: {results[idx]:.4f}") # added this mainly to make sure the result with the highest score is at the top 
         print("-" * 80)
 
-# Function to handle user interaction
 def user_search(df, vectorizer, X):
     """Asks for user input and performs searches until the user quits."""
     
