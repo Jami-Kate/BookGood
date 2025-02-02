@@ -48,7 +48,7 @@ def vectorize_data(df):
     return vectorizer, X
 
 def search_query(query, df, vectorizer, X):
-    """Searches articles based on cosine similarity with the query."""
+    """Searches articles and prints the results."""
     queryVec = vectorizer.transform([query])
     results = cosine_similarity(X, queryVec).reshape((-1,))
 
@@ -67,7 +67,7 @@ def search_query(query, df, vectorizer, X):
         print("-" * 80)
 
 def user_search(df, vectorizer, X):
-    """Asks for user input and performs searches until the user quits."""
+    """Asks for user input until the user quits."""
     
     query = input("What are we searching for today? Enter your query or leave the field blank to quit:\n")
     while query:
