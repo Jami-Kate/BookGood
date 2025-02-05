@@ -5,7 +5,6 @@ from selenium import webdriver
 
 def cleanup(str):
     str = re.sub('\[\^\]', '', str)
- #   str = re.sub('([A-Za-z]+)([A-Z]+)', '\1. \2', str)
     return str
 
 def get(book_url):
