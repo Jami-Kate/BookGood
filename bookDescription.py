@@ -13,9 +13,6 @@ cuckoo = 'https://www.whsmith.co.uk/Product/Gretchen-Felker-Martin/Cuckoo/131006
 
 def get_book(book_url):
 
-    session = requests.Session()
-    r = session.get(book_url)
-
     options = webdriver.ChromeOptions()
     options.add_argument("--headless")
 
