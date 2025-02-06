@@ -1,9 +1,11 @@
 from sklearn.feature_extraction.text import TfidfVectorizer
+from nltk.tokenize import word_tokenize
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 import re
-import requests
 
 def load_data(file_path="wikiData.txt"):
     """Loads and extracts titles and first paragraphs from the data."""
@@ -32,12 +34,10 @@ def load_data(file_path="wikiData.txt"):
 
 def clean_text(df):
     """Removes stopwords from the text column."""
-    stopwordsList = requests.get(
-        "https://gist.githubusercontent.com/rg089/35e00abf8941d72d419224cfd5b5925d/raw/12d899b70156fd0041fa9778d657330b024b959c/stopwords.txt"
-    ).content
-    stopwords = set(stopwordsList.decode().splitlines())
-
-    df["text"] = df["text"].apply(lambda x: [word for word in str(x).split() if word.lower() not in stopwords])
+    stopwordsList = set(stopwords.words('english'))
+    lemmatizer = WordNetLemmatizer()
+    df["text"] = df["text"].apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in word_tokenize(str(x)) 
+                                                      if word.isalpha() and word not in stopwordsList]))
     return df
 
 def vectorize_data(df):
