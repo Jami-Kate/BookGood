@@ -1,6 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
+import os
 
 url = f'https://www.bookreporter.com/coming-soon'
 response = requests.get(url)
@@ -27,6 +29,18 @@ for linkie in linksTemp:
 
 bookDets = [""] * (len(links))
 
+# Data to be written
+dictionary = {
+    "name": "sathiyajith",
+    "rollno": 56,
+    "cgpa": 8.6,
+    "phonenumber": "9976770500"
+}
+ 
+# Serializing json
+json_object = None
+
+
 def get_book(book_url):
 
     response = requests.get(book_url)
@@ -52,9 +66,33 @@ def get_book(book_url):
     return {'title' : title, 'author' : author, 'genres' : category, 'review' : review}
 
 i = 0
+
+if os.path.exists("../data/data.json"):
+  os.remove("../data/data.json")
+
+file = open('../data/data.json','w')
+'''
+def write_json(new_data):
+    with open('../data/data.json','r+') as file:
+
+        # First we load existing data into a dict.
+        if len(file) == 0:
+            file_data = json.load(file)
+            # Join new_data with file_data inside emp_details
+            file_data.append(new_data)
+            # Sets file's current position at offset.
+            file.seek(0)
+            # convert back to json.
+            json.dump(file_data, file, indent = 4)
+        else:
+            json.dump(new_data, indent = 4)
+'''
 for link in links:
     bookDets[i] = get_book(link)
     i += 1
 
-print(bookDets)
+
+
+json.dump(bookDets, file, indent = 4)
+
  
