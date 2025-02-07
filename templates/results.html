@@ -1,7 +1,8 @@
 {% extends "layout.html" %}
 
 {% block title %}
-check out this title I made work with partials
+
+Results for {{query}}
 {% endblock %}
 
 {% block content %} 
@@ -9,11 +10,17 @@ check out this title I made work with partials
     {% if query %}
     <h2>it seems you've searched {{query}}</h2>
         {% for result in results%}
-        <h3>{{result}}</h3>
+        <div>
+            <h3>
+                {{result}}
+            </h3>
+            <p>here's some stuff about your freakin {{result}}</p>
+
+        </div>
+        
         {% endfor %}
-        {% else %}
-        <h2>try searching something nerd</h2>
     {% endif %}
+
     <button>Show 30 more</button>
 
     {% endblock %}

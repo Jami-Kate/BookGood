@@ -6,11 +6,17 @@
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <header>header!</header>
-    <nav>navbar? dare we dream?</nav>
+    <header>header!
+        {% block header %} {% endblock %}
+    </header>
+    <nav>navbar? dare we dream?
+        {% block navbar %} {% endblock %}
+    </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>footer!</footer>
+    <footer>footer!
+        {% block footer %} {% endblock %}
+    </footer>
 </body>
 </html>
