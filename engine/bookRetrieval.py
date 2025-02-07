@@ -1,31 +1,44 @@
 import requests
 from bs4 import BeautifulSoup
 import re
+import json
+import os
+import time
 
-url = f'https://www.bookreporter.com/coming-soon'
-response = requests.get(url)
-soup = BeautifulSoup(response.content, 'html.parser')
+class LinkManager: 
+    def __init__(self): 
+        self.links = []
+        self.details = []
 
-linksTemp = soup.find_all('div', class_ = 'book-info')
+def LMnger(): 
+    return LinkManager() 
 
-i = 1
-while i < 6:
-    url = f'https://www.bookreporter.com/coming-soon?page={i}'
+def book_links():
+    url = f'https://www.bookreporter.com/coming-soon'
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
-    temp2 = soup.find_all('div', class_ = 'book-info')
-    for tem in temp2:
-        linksTemp.append(tem)
-    i += 1
 
-links = [] * len(linksTemp)
+    linksTemp = soup.find_all('div', class_ = 'book-info')
 
-for linkie in linksTemp:
-    linkTemp = linkie.find('a')
-    link = linkTemp['href']
-    links.append('https://www.bookreporter.com' + link)
+    i = 1
+    while i < 6:
+        url = f'https://www.bookreporter.com/coming-soon?page={i}'
+        response = requests.get(url)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        temp2 = soup.find_all('div', class_ = 'book-info')
+        for tem in temp2:
+            linksTemp.append(tem)
+        i += 1
 
-bookDets = [""] * (len(links))
+    links = [] * len(linksTemp)
+
+    for linkie in linksTemp:
+        linkTemp = linkie.find('a')
+        link = linkTemp['href']
+        links.append('https://www.bookreporter.com' + link)
+    
+    return links
+
 
 def get_book(book_url):
 
@@ -51,10 +64,41 @@ def get_book(book_url):
 
     return {'title' : title, 'author' : author, 'genres' : category, 'review' : review}
 
-i = 0
-for link in links:
-    bookDets[i] = get_book(link)
-    i += 1
+def first_retrieval(linkFile, bookDetsFile):
+    i = 0
+    while i < 30:
+        bookDetsFile[i] = get_book(linkFile[i])
+        i += 1
 
-print(bookDets)
- 
+    if os.path.exists("../data/data.json"):
+        os.remove("../data/data.json")
+    file = open('../data/data.json','w')
+    
+    json.dump(bookDetsFile, file, indent = 4)
+
+    return bookDetsFile
+
+
+def retrieve_more(linkFile, bookDetsFile, ind):
+    startInd = 30 * ind
+    endInd = 30 * (ind + 1)
+
+    if startInd >= len(linkFile):
+        return bookDetsFile
+    
+    while startInd < endInd:
+        bookDetsFile[startInd] = get_book(linkFile[startInd])
+        startInd += 1
+    
+    print(startInd)
+    print(endInd)
+
+    if os.path.exists("../data/data.json"):
+        os.remove("../data/data.json")
+    file = open('../data/data.json','w')
+    
+    json.dump(bookDetsFile, file, indent = 4)
+
+    return bookDetsFile
+
+
