@@ -6,14 +6,16 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/search') # Searches term from form
+@app.route('/search') # Just returns your search query rn! But just you wait
 def search():
     query = request.args.get('query')
-    return query
+    return render_template('results.html', query = query, results = [query, query, query])
 
-@app.route('/results/<query>')
-def display_results(query):
-    return render_template('results.html', query = query)
+    # Call retreive_books (gets 150 books)
+    # Display first 30 results
+    # Get 30
+
+
 
 if __name__ == "__main__":
     app.run(debug=True)

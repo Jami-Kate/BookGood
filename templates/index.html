@@ -1,8 +1,12 @@
-<html>
-    <title>Home</title>
+{% extends "layout.html" %}
+{% block title %}
+check out this title I made work with partials
+{% endblock %}
+
+{% block content %}
     <h1>What's up nerds</h1>
-    <form action="/search" method="get">
+    <form action="/search">
         <input type="text" placeholder="search me already" name="query">
         <button type="submit">do it</button>
     </form>
-</html>
+    {% endblock %}
