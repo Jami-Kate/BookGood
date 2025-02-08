@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request
+from engine.bookRetrieval import book_links
 
 app = Flask(__name__)
 
@@ -8,6 +9,7 @@ def home():
 
 @app.route('/search') # Just returns your search query rn! But just you wait
 def search():
+    book_links()
     query = request.args.get('query')
     return render_template('results.html', query = query, results = [query, query, query])
 
