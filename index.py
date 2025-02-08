@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from engine.bookRetrieval import book_links
+from engine.bookRetrieval import *
+
 
 app = Flask(__name__)
 
@@ -7,11 +8,18 @@ app = Flask(__name__)
 def home():
     return render_template('index.html')
 
-@app.route('/search') # Just returns your search query rn! But just you wait
+@app.route('/search') # Just pukes out everything in data.json right now! But just you wait
 def search():
-    book_links()
+# Open and read JSON file
+    with open('data/data.json', 'r') as file:
+        data = json.load(file)
+    
+    #TODO: apply query to data
     query = request.args.get('query')
-    return render_template('results.html', query = query, results = [query, query, query])
+    results = data
+
+    # Renders results template; passes in query and results
+    return render_template('results.html', query = query, results = results)
 
     # Call retreive_books (gets 150 books)
     # Display first 30 results
