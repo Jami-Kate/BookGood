@@ -17,6 +17,9 @@ def search():
     # Display first 30 results
     # Get 30
 
+@app.errorhandler(404)
+def redirect(e):
+    return render_template('err.html', e = e)
 
 
 if __name__ == "__main__":
