@@ -5,31 +5,17 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
-import re
+import json
 
-def load_data(file_path="wikiData.txt"):
+def load_data(filepath="./data/data.json"):
     """Loads and extracts titles and first paragraphs from the data."""
     
-    documents = [""]
-    i = 0
-    
-    with open(file_path, "r", encoding="utf8") as data:
-        for line in data:
-            if line != "</article>\n":
-                documents[i] += line
-            else:
-                i += 1
-                documents.append("")
+    with open(filepath,'r') as f:
+        data = json.load(f)
 
-    titles = []
-    paragraphs = []
-    for document in documents:
-        matches = re.findall(r'<article name="(.*?)">\n(.*?)\n', document)
-        for match in matches:
-            titles.append(match[0])  
-            paragraphs.append(match[1])  
-
-    df = pd.DataFrame({"title": titles, "text": paragraphs})
+    data = [item for item in data if isinstance(item, dict) and item]
+    df = pd.DataFrame(data)
+    df['text'] = df['review']
     return df
 
 def clean_text(df):
@@ -41,29 +27,46 @@ def clean_text(df):
     return df
 
 def vectorize_data(df):
-    """Converts text into TF-IDF vectors."""
+    """Converts text into TF-IDF vectors using the same vectorizer for title and text."""
     vectorizer = TfidfVectorizer()
-    tfidfMatrix = vectorizer.fit_transform(df["text"])
+    combined = df["author"].astype(str) + " " + df["title"].astype(str) + " " + df["text"].astype(str)  # Merge author, title and text
+    tfidfMatrix = vectorizer.fit_transform(combined)
+    
     return vectorizer, tfidfMatrix
 
 def search_query(query, df, vectorizer, tfidfMatrix):
     """Searches articles and prints the results."""
     queryVec = vectorizer.transform([query])
-    results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,)) 
+    results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,))
+    
+    # Find exact title matches
+    exactMatches = df.loc[df[['title', 'author']].apply(lambda x: query.lower() in x.str.lower().values, axis=1)]
+    if not exactMatches.empty:
+        print(f"\nExact match found for '{query}':\n")
+        for _, row in exactMatches.iterrows(): # _, to ignore indices 
+            print(f"Title: {row['title']}")
+            print(f"Author: {row.get('author')}")
+            print(f"Description: {row['review']}")
+            print("-" * 80)
+        return
+    
+    # Find closest matches
+    matchingIndices = np.where(results > 0.0)[0]
+    sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]]
 
-    matchingIndices = np.where(results > 0.0)[0] # selecting results that are higher than 0.0
-    sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] # retrieve highest values from the array
     if len(sortedIndices) == 0:
         print(f"No matching results found for '{query}'.\n")
         return
 
-    print(f"\nQuery: '{query}'\n")
-    for idx in sortedIndices:
-        title = df.iloc[idx]["title"] 
-        text = df.iloc[idx]["text"]
+    print(f"\nResults for '{query}':\n")
+    for idx in sortedIndices[:5]:  # Limit results to top 5
+        title = df.iloc[idx]["title"]
+        author = df.iloc[idx].get("author")
+        text = df.iloc[idx]["review"]
         print(f"Title: {title}")
-        print(f"First paragraph: {text}") 
-        print(f"Similarity Score: {results[idx]:.4f}") # added this mainly to make sure the result with the highest score is at the top 
+        print(f"Author: {author}")
+        print(f"Description: {text}")
+        print(f"Similarity Score: {results[idx]:.4f}")
         print("-" * 80)
 
 def user_search(df, vectorizer, tfidfMatrix):
