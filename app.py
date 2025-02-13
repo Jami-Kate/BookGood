@@ -21,10 +21,13 @@ def search():
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
+    # Open books json file
     with open('./data/data.json','r') as f:
         books = json.load(f)
-
-    book = [book for book in books if isinstance(book, dict) and book['id'] == id]
+    # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
+    id = int(id)
+    # Grab book with matching ID from database and pass to render_template
+    book = next((book for book in books if book['id'] == id), 'None')
     return render_template('book.html', book = book)
 
 @app.errorhandler(404)

@@ -4,6 +4,24 @@
 {% endblock %}
 
 {% block content %}
-book stuff!
-{{book}}
+<div class="container">
+    <h1>
+        {{book['title']}}
+    </h1>
+    <h2>
+        {{book['author']}}
+    </h2>
+    <ul class="list-group list-group-horizontal">
+        {% for genre in book['genres'] %}
+        <li class="list-group-item">
+            {{genre}}
+        </li>
+        {% endfor %}
+    </ul>
+    <p>
+        {{book['review']}}
+    </p>
+    <button type="button" onclick="go_back();">back</button>
+</div>
+
     {% endblock %}
