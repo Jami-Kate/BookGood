@@ -4,6 +4,7 @@ import re
 import json
 import os
 import time
+import sys
 
 class LinkManager: 
     def __init__(self): 
@@ -14,12 +15,14 @@ def LMnger():
     return LinkManager() 
 
 def book_links():
+    '''Initial link pages'''
     url = f'https://www.bookreporter.com/coming-soon'
     response = requests.get(url)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     linksTemp = soup.find_all('div', class_ = 'book-info')
 
+    '''Iterate next 5 pages for links; retrieves 150 total'''
     i = 1
     while i < 6:
         url = f'https://www.bookreporter.com/coming-soon?page={i}'
@@ -47,6 +50,7 @@ def get_book(book_url):
     
     title = soup.find('h2', id = 'page-title').find('a').text.strip()
     author = soup.find('div', id = 'author').find('a').text.strip()
+    hashedTitle = hash(title + author) % ((sys.maxsize + 1) * 2)
     category = soup.find('div', id = 'book-data').find_all(href=re.compile("/genres/"))
     
     i = 0
@@ -62,7 +66,8 @@ def get_book(book_url):
         review = review + " " + details[i].text.strip()
         i += 1
 
-    return {'title' : title, 'author' : author, 'genres' : category, 'review' : review}
+    return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review}
+
 
 def first_retrieval(linkFile, bookDetsFile):
     i = 0
@@ -89,9 +94,6 @@ def retrieve_more(linkFile, bookDetsFile, ind):
     while startInd < endInd:
         bookDetsFile[startInd] = get_book(linkFile[startInd])
         startInd += 1
-    
-    print(startInd)
-    print(endInd)
 
     if os.path.exists("../data/data.json"):
         os.remove("../data/data.json")
