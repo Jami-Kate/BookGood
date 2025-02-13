@@ -8,10 +8,10 @@ Results for {{query}}
 {% block content %} 
     {% if results %}
     <h2 class="mb-3">Results for '{{query}}'</h2>
-<div class="row row-cols-4" id="results-display">
+    <div class="row row-col-4">
     {% for result in results %}
-    <div class="col mb-3">
-        <div class="card" style="width: 18rem;">
+    <div class="col mb-4">
+        <div class="card h-100" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title">{{result['title']}}</h5>
               <ul class="list-group list-group-flush">
@@ -20,15 +20,13 @@ Results for {{query}}
                 {% endfor %}
               </ul>
               <p class="card-text">{{result['review'][:100] + '...'}}</p>
-              <a href="{{ url_for('display_book', id = result['id']) }}" class="btn btn-primary">Go somewhere</a>
             </div>
-          </div>
+            <div class="card-footer"><a href="{{ url_for('display_book', id = result['id']) }}" class="">See more</a></div>
+        </div>
     </div>
-    {% endfor %}
-</div>
-        
 
-        
+    {% endfor %}
+    </div>
         
     {% else %}
         <h2>nothing found for {{ query }}</h2>
