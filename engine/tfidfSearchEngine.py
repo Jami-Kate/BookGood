@@ -32,10 +32,6 @@ def vectorize_data(df):
     vectorizer = TfidfVectorizer()
     combined = df["author"].astype(str) + " " + df["title"].astype(str) + " " + df["genres"].astype(str) + " " + df["text"].astype(str)  # Merge author, title and text
     tfidfMatrix = vectorizer.fit_transform(combined)
-    # Encode genres as binary features
-    # genreVectorizer = TfidfVectorizer()
-    # genreMatrix = genreVectorizer.fit_transform(df["genre"].astype(str))
-    # finalMatrix = hstack([tfidfMatrix, genreMatrix])
     
     return vectorizer, tfidfMatrix
 
