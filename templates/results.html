@@ -25,7 +25,7 @@ Results for {{query}}
             </div>
 
             <p>{{result['review'][:50] + '...'}}</p>
-            <a href="">link</a>
+            <a href="{{ url_for('display_book', id = result['id']) }}">See more</a>
         </div>
         
         {% endfor %}

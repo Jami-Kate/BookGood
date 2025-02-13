@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
 from engine.tfidfSearchEngine import site_search
+import json
 
 
 app = Flask(__name__, static_url_path='/static')
@@ -20,7 +21,11 @@ def search():
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
-    return render_template('book.html')
+    with open('./data/data.json','r') as f:
+        books = json.load(f)
+
+    book = [book for book in books if isinstance(book, dict) and book['id'] == id]
+    return render_template('book.html', book = book)
 
 @app.errorhandler(404)
 def redirect(e):
