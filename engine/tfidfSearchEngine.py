@@ -5,7 +5,6 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
-from scipy.sparse import hstack
 import json
 
 def load_data(filepath="./data/data.json"):
