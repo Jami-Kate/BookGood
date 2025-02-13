@@ -51,7 +51,7 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         for _, row in exactMatches.iterrows(): # _, to ignore indices 
             print(f"Title: {row["title"]}")
             print(f"Author: {row["author"]}")
-            print(f"Genres: {', '.join(row['genres'])}")  # Directly access genres from row
+            print(f"Genres: {', '.join(row['genres'])}")  
             print(f"Description: {row["review"]}")
             print("-" * 80)
         return
