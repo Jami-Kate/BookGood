@@ -68,7 +68,6 @@ def get_book(book_url):
 
     return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review}
 
-
 def first_retrieval(linkFile, bookDetsFile):
     i = 0
     while i < 30:

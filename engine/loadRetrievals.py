@@ -17,3 +17,27 @@ t.details = retrieve_more(t.links,t.details,ind)
 
 ind += 1
 # *
+
+# *
+t.details = retrieve_more(t.links,t.details,ind)
+
+ind += 1
+# *
+
+# *
+t.details = retrieve_more(t.links,t.details,ind)
+
+ind += 1
+# *
+
+# *
+t.details = retrieve_more(t.links,t.details,ind)
+
+ind += 1
+# *
+
+# *
+t.details = retrieve_more(t.links,t.details,ind)
+
+ind += 1
+# *
