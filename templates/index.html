@@ -5,8 +5,19 @@ check out this title I made work with partials
 
 {% block content %}
     <h1>What's up nerds</h1>
-    <form action="/search">
-        <input type="text" placeholder="search me already" name="query">
-        <button type="submit">do it</button>
-    </form>
+    <h2 class="collapsible active">boolean search</h2>
+    <div class="content" style="display: block">
+        <form action="/search">
+            <input type="text" placeholder="search me" name="boolean-query">
+            <button type="submit">do it (boolean style)</button>
+        </form>
+    </div>
+    <h2 class="collapsible">tf/idf search</h2>
+    <div class="content" style="display: none">
+        <form action="/search">
+            <input type="text" placeholder="search me" name="tf-idf-query">
+            <button type="submit">do it (tf/idf style)</button>
+        </form>
+    </div>
+   
     {% endblock %}
