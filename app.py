@@ -8,7 +8,7 @@ app = Flask(__name__, static_url_path='/static')
 def home():
     return render_template('index.html')
 
-@app.route('/tfidf')
+@app.route('/tfidf') # Perform TF/IDF search and load results
 def search():
     query = request.args.get('tf-idf-query')
     print(query)
@@ -17,6 +17,10 @@ def search():
     return render_template('results.html', query = query, results = results)
 
     #TODO: load additional results
+
+@app.route('/book/<id>') # Show particular book
+def display_book(id):
+    return render_template('book.html')
 
 @app.errorhandler(404)
 def redirect(e):
