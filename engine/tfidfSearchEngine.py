@@ -5,6 +5,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
+from scipy.sparse import hstack
 import json
 
 def load_data(filepath="./data/data.json"):
@@ -20,7 +21,7 @@ def load_data(filepath="./data/data.json"):
 
 def clean_text(df):
     """Removes stopwords from the text column."""
-    stopwordsList = set(stopwords.words('english'))
+    stopwordsList = set(stopwords.words("english"))
     lemmatizer = WordNetLemmatizer()
     df["text"] = df["text"].apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in word_tokenize(str(x)) 
                                                       if word.isalpha() and word not in stopwordsList]))
@@ -29,8 +30,12 @@ def clean_text(df):
 def vectorize_data(df):
     """Converts text into TF-IDF vectors using the same vectorizer for title and text."""
     vectorizer = TfidfVectorizer()
-    combined = df["author"].astype(str) + " " + df["title"].astype(str) + " " + df["text"].astype(str)  # Merge author, title and text
+    combined = df["author"].astype(str) + " " + df["title"].astype(str) + " " + df["genres"].astype(str) + " " + df["text"].astype(str)  # Merge author, title and text
     tfidfMatrix = vectorizer.fit_transform(combined)
+    # Encode genres as binary features
+    # genreVectorizer = TfidfVectorizer()
+    # genreMatrix = genreVectorizer.fit_transform(df["genre"].astype(str))
+    # finalMatrix = hstack([tfidfMatrix, genreMatrix])
     
     return vectorizer, tfidfMatrix
 
@@ -40,13 +45,14 @@ def search_query(query, df, vectorizer, tfidfMatrix):
     results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,))
     
     # Find exact title matches
-    exactMatches = df.loc[df[['title', 'author']].apply(lambda x: query.lower() in x.str.lower().values, axis=1)]
+    exactMatches = df.loc[df[["title", "author"]].apply(lambda x: query.lower() in x.str.lower().values, axis=1)]
     if not exactMatches.empty:
         print(f"\nExact match found for '{query}':\n")
         for _, row in exactMatches.iterrows(): # _, to ignore indices 
-            print(f"Title: {row['title']}")
-            print(f"Author: {row.get('author')}")
-            print(f"Description: {row['review']}")
+            print(f"Title: {row["title"]}")
+            print(f"Author: {row["author"]}")
+            print(f"Genres: {', '.join(row['genres'])}")  # Directly access genres from row
+            print(f"Description: {row["review"]}")
             print("-" * 80)
         return
     
@@ -61,10 +67,12 @@ def search_query(query, df, vectorizer, tfidfMatrix):
     print(f"\nResults for '{query}':\n")
     for idx in sortedIndices[:5]:  # Limit results to top 5
         title = df.iloc[idx]["title"]
-        author = df.iloc[idx].get("author")
+        author = df.iloc[idx]["author"]
+        genres = df.iloc[idx]["genres"]
         text = df.iloc[idx]["review"]
         print(f"Title: {title}")
         print(f"Author: {author}")
+        print(f"Genres: {', '.join(genres)}")
         print(f"Description: {text}")
         print(f"Similarity Score: {results[idx]:.4f}")
         print("-" * 80)
