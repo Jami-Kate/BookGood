@@ -48,7 +48,7 @@ def search_query(query, df, vectorizer, tfidfMatrix):
             print(f"Author: {row.get('author')}")
             print(f"Description: {row['review']}")
             print("-" * 80)
-        return
+        return exactMatches
     
     # Find closest matches
     matchingIndices = np.where(results > 0.0)[0]
@@ -58,16 +58,18 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         print(f"No matching results found for '{query}'.\n")
         return
 
-    print(f"\nResults for '{query}':\n")
-    for idx in sortedIndices[:5]:  # Limit results to top 5
-        title = df.iloc[idx]["title"]
-        author = df.iloc[idx].get("author")
-        text = df.iloc[idx]["review"]
-        print(f"Title: {title}")
-        print(f"Author: {author}")
-        print(f"Description: {text}")
-        print(f"Similarity Score: {results[idx]:.4f}")
-        print("-" * 80)
+    
+    # print(f"\nResults for '{query}':\n")
+    # for idx in sortedIndices[:5]:  # Limit results to top 5
+    #     title = df.iloc[idx]["title"]
+    #     author = df.iloc[idx].get("author")
+    #     text = df.iloc[idx]["review"]
+    #     print(f"Title: {title}")
+    #     print(f"Author: {author}")
+    #     print(f"Description: {text}")
+    #     print(f"Similarity Score: {results[idx]:.4f}")
+    #     print("-" * 80)
+    return [df.iloc[idx] for idx in sortedIndices]
 
 def user_search(df, vectorizer, tfidfMatrix):
     """Asks for user input until the user quits."""
@@ -81,4 +83,6 @@ def user_search(df, vectorizer, tfidfMatrix):
 df = load_data()
 df = clean_text(df)
 vectorizer, tfidfMatrix = vectorize_data(df)
-user_search(df, vectorizer, tfidfMatrix)
+
+def site_search(query):
+    return search_query(query, df, vectorizer, tfidfMatrix)

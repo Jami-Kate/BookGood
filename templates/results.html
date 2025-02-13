@@ -7,25 +7,33 @@ Results for {{query}}
 
 {% block content %} 
     <h1>Results</h1>
-    {% if query %}
-    <h2>it seems you've searched {{query}}</h2>
+    {% if results %}
+    <h2>results for '{{query}}'</h2>
+
         {% for result in results %}
         <div>
             <h3>
                 {{result['title']}}
             </h3>
             <h4>{{result['author']}}</h4>
-            <p>
-                {{result['genres']}}
-            </p>
-            <p>{{result['review']}}</p>
+            <div>
+                {% for genre in result['genres'] %}
+                <p>
+                    {{genre}}
+                </p>
+                {% endfor %}
+            </div>
+
+            <p>{{result['review'][:50] + '...'}}</p>
             <a href="">link</a>
         </div>
         
         {% endfor %}
+    {% else %}
+        <h2>nothing found for {{ query }}</h2>
     {% endif %}
 
-    <button>Show 30 more</button>
+    <button>More</button>
 
     {% endblock %}
 
