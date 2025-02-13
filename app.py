@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from engine.bookRetrieval import *
 
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='/static')
 
 @app.route('/') # Gets you to homepage
 def home():
@@ -32,3 +32,4 @@ def redirect(e):
 
 if __name__ == "__main__":
     app.run(debug=True)
+    print('watching. waiting')

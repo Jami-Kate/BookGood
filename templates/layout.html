@@ -3,20 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./styles/app.css">
+    <link rel="stylesheet" href="/static/css/app.css">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
-    <header>header!
+    <header class="not-yet">
+        header!
         {% block header %} {% endblock %}
     </header>
-    <nav>navbar? dare we dream?
+    <nav class="not-yet">
+        navbar if we dare to dream
         {% block navbar %} {% endblock %}
     </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>footer!
+    <footer class="not-yet">
+        footer mayhap
         {% block footer %} {% endblock %}
     </footer>
 
