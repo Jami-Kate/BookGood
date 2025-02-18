@@ -6,6 +6,11 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 import json
+import matplotlib.pyplot as plt
+from collections import Counter
+import seaborn as sns
+import io
+import base64
 
 def load_data(filepath="./data/data.json"):
     """Loads and extracts titles and first paragraphs from the data."""
@@ -44,14 +49,8 @@ def search_query(query, df, vectorizer, tfidfMatrix):
     if not exactMatches.empty:
         matchingIndices = exactMatches.index.to_numpy() # extract match indices as a numpy array
         sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] # sort indices by cosine similarity 
-        #print(f"\nExact match found for '{query}':\n")
-        #for _, row in exactMatches.iterrows(): # _, to ignore indices 
-        #    print(f"Title: {row['title']}")
-        #    print(f"Author: {row['author']}")
-        #    print(f"Description: {row['review']}")
-        #    print("-" * 80)
-        return [df.iloc[idx] for idx in sortedIndices]
-    
+        return sortedIndices
+        
     # Find closest matches
     matchingIndices = np.where(results > 0.0)[0]
     sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]]
@@ -59,28 +58,9 @@ def search_query(query, df, vectorizer, tfidfMatrix):
     if len(sortedIndices) == 0:
         print(f"No matching results found for '{query}'.\n")
         return
-
-    # print(f"\nResults for '{query}':\n")
-    # for idx in sortedIndices[:5]:  # Limit results to top 5
-    #     title = df.iloc[idx]["title"]
-    #     author = df.iloc[idx]["author"]
-    #     text = df.iloc[idx]["review"]
-    #     print(f"Title: {title}")
-    #     print(f"Author: {author}")
-    #     print(f"Description: {text}")
-    #     print(f"Similarity Score: {results[idx]:.4f}")
-    #     print("-" * 80)
-    return [df.iloc[idx] for idx in sortedIndices]
-
-def user_search(df, vectorizer, tfidfMatrix):
-    """Asks for user input until the user quits."""
     
-    query = input("What are we searching for today? Enter your query or leave the field blank to quit:\n")
-    while query:
-        search_query(query, df, vectorizer, tfidfMatrix)
-        query = input("Anything else? Enter another query or leave the field blank to quit:\n")
-    print("See you later!")
-
+    return sortedIndices
+    
 df = load_data()
 df = clean_text(df)
 vectorizer, tfidfMatrix = vectorize_data(df)
