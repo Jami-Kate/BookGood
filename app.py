@@ -8,6 +8,8 @@ from collections import Counter
 import seaborn as sns
 import io
 import base64 
+from engine.bookMood import plot_moods
+from transformers import pipeline
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -51,7 +53,19 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')
-    return render_template('book.html', book = book)
+
+    classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+
+    model_outputs = classifier(book['review'])[0]
+    mood_plot = plot_moods(model_outputs)
+
+    img = io.BytesIO() 
+    plt.savefig(img, format="png") # temporarily store the image in byte stream 
+    img.seek(0)
+    plt.close(mood_plot)  # close to free memory
+    mood64 = base64.b64encode(img.getvalue()).decode('utf-8') # encode the imag in base64; allows it to be enbedded in HTML without creating a separate file for it
+
+    return render_template('book.html', book = book, mood = mood64)
 
 @app.errorhandler(404)
 def redirect(e):
