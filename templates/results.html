@@ -9,6 +9,7 @@ Results for {{query}}
     {% if results %}
     <h2 class="mb-3">Results for '{{query}}'</h2>
     <div class="row row-col-4">
+      <img src="data:image/png;base64,{{ plot }}" alt="Plot"> 
     {% for result in results %}
     <div class="col mb-4">
         <div class="card h-100" style="width: 18rem;">
