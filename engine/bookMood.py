@@ -13,6 +13,8 @@ from sklearn.cluster import KMeans
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.cluster.hierarchy import linkage, dendrogram, fcluster
 
+from sklearn.decomposition import PCA
+
 import matplotlib.pyplot as plt
 import seaborn as sns
 
@@ -32,14 +34,14 @@ def get_book_themes(book, num = 5):
     extractor.candidate_selection()
     extractor.candidate_weighting()
     keyphrases = extractor.get_n_best(n=num)
-    # print("Extracted themes:")
-    # print("=================")
-    # for keyphrase in keyphrases:
-    #     print(f'{keyphrase[1]:.5f}   {keyphrase[0]}')
+    print("Extracted themes:")
+    print("=================")
+    for keyphrase in keyphrases:
+        print(f'{keyphrase[1]:.5f}   {keyphrase[0]}')
     return keyphrases
 
 
-# get_book_themes(books[0]['review'])
+get_book_themes(books[0]['review'])
 
 books_slice = book_reviews[:5]
 
@@ -78,34 +80,51 @@ for book_themes in all_book_themes:
 
     document_embeddings.append(doc_embedding)
 
+    # Plot embeddings in 2d?
+
 print("Number of document embeddings:", len(document_embeddings))
 print("Dimension of each embedding:", len(document_embeddings[0]))
 
-similarities = cosine_similarity(document_embeddings)
+pca = PCA(n_components=2)
+# print(document_embeddings)
+pca_vecs = pca.fit_transform(document_embeddings)
 
-plt.imshow(similarities, cmap='viridis', vmin=0, vmax=1)
+# print(pca_vecs)
 
+plt.figure()
 
-plt.colorbar() # Add a colorbar (legend)
+x_vals = [vec[0] for vec in pca_vecs]
+y_vals = [vec[1] for vec in pca_vecs]
 
-# Create labels for each document (Doc0, Doc1, ...)
-num_docs = similarities.shape[0]
-fig_labels = [f"Doc{i+1}" for i in range(num_docs)]
-
-# Use the labels on the x-axis and y-axis
-plt.xticks(np.arange(num_docs), fig_labels)
-plt.yticks(np.arange(num_docs), fig_labels)
-
-
-plt.title("Document Similarities") # Add a title
-
-# Overlay the numeric values on each cell
-for i in range(num_docs):
-    for j in range(num_docs):
-        # Format values with two decimals
-        plt.text(j, i, f"{similarities[i, j]:.2f}",
-                 ha='center', va='center', color='white')
-
-plt.tight_layout()
-plt.grid(False)
+plt.scatter(x_vals, y_vals)
 plt.show()
+
+# similarities = cosine_similarity(document_embeddings)
+# print(similarities)
+
+# plt.imshow(similarities, cmap='viridis', vmin=0, vmax=1)
+
+
+# plt.colorbar() # Add a colorbar (legend)
+
+# # Create labels for each document (Doc0, Doc1, ...)
+# num_docs = similarities.shape[0]
+# fig_labels = [f"Doc{i+1}" for i in range(num_docs)]
+
+# # Use the labels on the x-axis and y-axis
+# plt.xticks(np.arange(num_docs), fig_labels)
+# plt.yticks(np.arange(num_docs), fig_labels)
+
+
+# plt.title("Document Similarities") # Add a title
+
+# # Overlay the numeric values on each cell
+# for i in range(num_docs):
+#     for j in range(num_docs):
+#         # Format values with two decimals
+#         plt.text(j, i, f"{similarities[i, j]:.2f}",
+#                  ha='center', va='center', color='white')
+
+# plt.tight_layout()
+# plt.grid(False)
+# plt.show()
