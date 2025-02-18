@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request
 from engine.tfidfSearchEngine import site_search, df
 import json
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from collections import Counter
 import seaborn as sns
