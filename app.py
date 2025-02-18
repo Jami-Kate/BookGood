@@ -54,11 +54,14 @@ def display_book(id):
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')
 
+    # Grab roberta classifier
     classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
+    # Run classifier on review of book and generate plot of its top five moods
     model_outputs = classifier(book['review'])[0]
     mood_plot = plot_moods(model_outputs)
 
+    # Convert mood plot to image (shamelessly ripping off Sonja's code here)
     img = io.BytesIO() 
     plt.savefig(img, format="png") # temporarily store the image in byte stream 
     img.seek(0)
