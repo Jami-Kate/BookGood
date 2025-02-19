@@ -18,6 +18,7 @@ def load_data(filepath="./data/data.json"):
     with open(filepath,'r') as f:
         data = json.load(f)
 
+    data = data['books']
     data = [item for item in data if isinstance(item, dict) and item]
     df = pd.DataFrame(data)
     df['text'] = df['review']
