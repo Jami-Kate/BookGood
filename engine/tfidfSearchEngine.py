@@ -6,11 +6,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 import json
-import matplotlib.pyplot as plt
-from collections import Counter
-import seaborn as sns
-import io
-import base64
 
 def load_data(filepath="./data/data.json"):
     """Loads and extracts titles and first paragraphs from the data."""
