@@ -35,6 +35,7 @@ def display_book(id):
     # Open books json file
     with open('./data/data.json','r') as f:
         books = json.load(f)
+        books = books['books']
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
