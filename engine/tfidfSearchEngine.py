@@ -48,7 +48,7 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         return sortedIndices
         
     # Find closest matches
-    matchingIndices = np.where(results > 0.0)[0]
+    matchingIndices = np.where(results > 0.0)[0]  
     sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]]
 
     if len(sortedIndices) == 0:
