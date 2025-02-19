@@ -1,43 +1,12 @@
 from bookRetrieval import *
+import time
+
 
 #run upon loading between *
 # *
-t = LMnger()
-t.links = book_links()
-bookDets = [""] * (len(t.links))
-t.details = first_retrieval(t.links,bookDets)
-# *
+book_links()
 
+first_retrieval()
 
-ind = 1
+retrieve_more()
 
-# between the * run each time the 'load more' button runs
-# *
-t.details = retrieve_more(t.links,t.details,ind)
-
-ind += 1
-# *
-
-# *
-t.details = retrieve_more(t.links,t.details,ind)
-
-ind += 1
-# *
-
-# *
-t.details = retrieve_more(t.links,t.details,ind)
-
-ind += 1
-# *
-
-# *
-t.details = retrieve_more(t.links,t.details,ind)
-
-ind += 1
-# *
-
-# *
-t.details = retrieve_more(t.links,t.details,ind)
-
-ind += 1
-# *
