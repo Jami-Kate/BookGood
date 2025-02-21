@@ -1,3 +1,30 @@
 .not-yet {
     display:none
 }
+
+.header {
+    background-color: #435c2b;
+    color: #fff;
+    font-family: 'Baskerville', 'Times New Roman', Times, serif;
+    font-weight: bold;
+    padding: 4px;
+  }
+
+.testing {
+    background-color:pink;
+} 
+
+.nav-link {
+    color: #fff;
+    font-family: 'Baskerville', 'Times New Roman', Times, serif;
+    font-weight: bold;
+}
+
+.nav-link:hover {
+    color: #eec02e;
+}
+  
+  .logo {
+    max-width: 100px;
+    padding: 5px;
+  }
