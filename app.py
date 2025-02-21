@@ -4,6 +4,7 @@ import json
 from engine.plotMood import plot_moods
 from engine.createImage import create_image
 from engine.plotPie import plot_pie
+from engine.getMood import get_mood
 from transformers import pipeline
 
 app = Flask(__name__, static_url_path='/static')
@@ -39,10 +40,12 @@ def display_book(id):
     # Grab roberta classifier
     classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
     
+    mood = get_mood(book['review'])
     #TODO: chunk reviews
     # Run classifier on review of book and generate plot of its top five moods
-    model_outputs = classifier(book['review'])[0]
-    mood_fig, mood_img = plot_moods(model_outputs)
+    model_outputs = classifier(book['review'])
+    print(mood)
+    mood_fig, mood_img = plot_moods(mood)
     mood64 = create_image(mood_fig, mood_img)
     return render_template('book.html', book = book, mood = mood64)
 

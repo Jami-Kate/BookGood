@@ -3,11 +3,15 @@ import io
 
 from math import pi
 
-def plot_moods(book, n = 5):
-    book = [mood for mood in book if mood['label'] != 'neutral'][:n] # Filter out the 'neutral' label if present and make a list of n most prominent moods (5 by default)
+def plot_moods(book):
     N = len(book)
-    labels = [mood['label'] for mood in book]
-    scores = [mood['score'] for mood in book]
+    labels = list(book.keys())
+    scores = list(book.values())
+
+    print(labels)
+    print(scores)
+
+    print(f'labels: {len(labels)}; scores: {len(scores)}')
 
     # Hacky stuff to make a circular graph work
     scores += scores[:1]
@@ -17,7 +21,7 @@ def plot_moods(book, n = 5):
     # Create radar plot
     ax = plt.subplot(111, polar=True)
 
-    plt.xticks(angles[:-1], list(labels), color='grey', size=10)
+    plt.xticks(angles[:-1], labels, color='grey', size=10)
 
     ax.set_rlabel_position(0)
 

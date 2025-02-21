@@ -4,7 +4,7 @@ import torch
 import pandas as pd
 import json
 
-def get_mood(text):
+def get_mood(text, n = 5):
     savani = "bhadresh-savani/distilbert-base-uncased-emotion"
 
     roberta = "SamLowe/roberta-base-go_emotions"
@@ -43,6 +43,7 @@ def get_mood(text):
         chunk_result =  {dic["label"]: dic["score"] for dic in chunk_result if dic["label"] != "neutral"}
         results.append(chunk_result)
 
+
     json_text = pd.DataFrame(results).mean().to_json()
     final_score = json.loads(json_text)
-    return final_score
+    return dict(list(final_score.items())[:n])
