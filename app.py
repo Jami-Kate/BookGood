@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, flash, redirect, request
 from engine.tfidfSearchEngine import site_search, df
 import json
 from engine.plotMood import plot_moods
@@ -17,13 +17,13 @@ def search():
     query = request.args.get('tf-idf-query')
     print(query)
     sortedIndices = site_search(query)
-    results = [df.iloc[idx] for idx in sortedIndices]
-    fig, genrePie = plot_pie(df, sortedIndices)
-    img64 = create_image(fig, genrePie)
-    
+    try:
+        results = [df.iloc[idx] for idx in sortedIndices]
+        fig, genrePie = plot_pie(df, sortedIndices)
+        img64 = create_image(fig, genrePie)
+    except:
+        return redirect('/')
     return render_template('results.html', query = query, results = results, plot = img64)
-
-    #TODO: load additional results
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
@@ -35,11 +35,11 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
-    # Grab roberta classifier
    
     mood = get_mood(book['review'])
     mood_fig, mood_img = plot_moods(mood)
     mood64 = create_image(mood_fig, mood_img)
+
     return render_template('book.html', book = book, mood = mood64)
 
 @app.route('/about')
@@ -55,7 +55,7 @@ def display_genres(genre):
     return render_template('genres.html', genre=genre, books=queryGenres)
 
 @app.errorhandler(404)
-def redirect(e):
+def err(e):
     return render_template('err.html', e = e)
 
 
