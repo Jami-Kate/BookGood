@@ -5,8 +5,9 @@
 .header {
     background-color: #435c2b;
     color: #fff;
-    font-family: 'Baskerville', 'Times New Roman', Times, serif;
-    font-weight: bold;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
     padding: 4px;
   }
 
@@ -16,15 +17,61 @@
 
 .nav-link {
     color: #fff;
-    font-family: 'Baskerville', 'Times New Roman', Times, serif;
-    font-weight: bold;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
 }
 
 .nav-link:hover {
     color: #eec02e;
 }
   
-  .logo {
+.logo {
     max-width: 100px;
     padding: 5px;
   }
+
+.fullHeight {
+    height: 90vh;
+}
+
+.fillOut {
+    height: 100%;
+}
+
+.indexBkgrnd {
+    background-image: url("../bookCase.jpg");
+    background-repeat: repeat;
+}
+
+.searchBox {
+    background-color: #435c2b;
+    border-radius: 25px;
+    color: #fff;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    padding: 30px;
+    filter: opacity(100%);
+}
+
+.btn-search {
+    color: #fff;
+    border-color:#fff;
+    border-width: 2px;
+    background-color: #435c2b;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    margin-right: 10px;
+    float: right;
+}
+
+.btn-search:hover {
+    background-color: #eec02e;
+    border-color:#fff;
+}
+
+.inputFont {
+    font-family: sans-serif;
+}
