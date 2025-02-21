@@ -6,6 +6,7 @@ Results for {{query}}
 {% endblock %}
 
 {% block content %} 
+<button onclick="location.href = '{{ url_for('home') }}';" class = "backButton">Back to Search</button>
     {% if results %}
     <h2 class="mb-3">The distribution of genres for '{{query}}'</h2>
     <div class="row row-col-4">
@@ -36,7 +37,6 @@ Results for {{query}}
     {% else %}
         <h2>nothing found for {{ query }}</h2>
     {% endif %}
-
-    <a href="{{ url_for('home') }}">back</a>
+    
 
     {% endblock %}
