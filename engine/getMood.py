@@ -40,9 +40,11 @@ def get_mood(text):
         chunk_result = pipe(
             [tokenizer.decode(input_ids_chunks[i], skip_special_tokens=True)]
         )[0]
-        chunk_result =  {dic["label"]: dic["score"] for dic in chunk_result }
+        chunk_result =  {dic["label"]: dic["score"] for dic in chunk_result if dic["label"] != "neutral"}
         results.append(chunk_result)
 
     json_text = pd.DataFrame(results).mean().to_json()
     final_score = json.loads(json_text)
     return final_score
+
+print(get_mood('what\'s up nerds'))
