@@ -1,12 +1,7 @@
 from flask import Flask, render_template, request
 from engine.tfidfSearchEngine import site_search, df
 import json
-import matplotlib
-matplotlib.use('Agg')
-import matplotlib.pyplot as plt
-import io
-import base64 
-from engine.bookMood import plot_moods
+from engine.plotMood import plot_moods
 from engine.createImage import create_image
 from engine.plotPie import plot_pie
 from transformers import pipeline
@@ -45,22 +40,12 @@ def display_book(id):
 
     # Grab roberta classifier
     classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
-
+    
+    #TODO: chunk reviews
     # Run classifier on review of book and generate plot of its top five moods
     model_outputs = classifier(book['review'])[0]
-    mood_plot = plot_moods(model_outputs)
-
-    #TODO: chunk reviews
-
-    #TODO: refactor to use Sonja's neat function
-
-    # Convert mood plot to image (shamelessly ripping off Sonja's code here)
-    img = io.BytesIO() 
-    plt.savefig(img, format="png") # temporarily store the image in byte stream 
-    img.seek(0)
-    plt.close(mood_plot)  # close to free memory
-    mood64 = base64.b64encode(img.getvalue()).decode('utf-8') # encode the imag in base64; allows it to be enbedded in HTML without creating a separate file for it
-
+    mood_fig, mood_img = plot_moods(model_outputs)
+    mood64 = create_image(mood_fig, mood_img)
     return render_template('book.html', book = book, mood = mood64)
 
 @app.errorhandler(404)

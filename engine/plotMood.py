@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import io
 
 from math import pi
 
@@ -28,4 +29,5 @@ def plot_moods(book, n = 5):
 
     ax.fill(angles, scores, 'b', alpha=0.1)
 
-    plt.show()
+    img = io.BytesIO()
+    return ax, img
