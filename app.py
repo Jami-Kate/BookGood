@@ -4,11 +4,11 @@ import json
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-from collections import Counter
-import seaborn as sns
 import io
 import base64 
 from engine.bookMood import plot_moods
+from engine.createImage import create_image
+from engine.plotPie import plot_pie
 from transformers import pipeline
 
 app = Flask(__name__, static_url_path='/static')
@@ -23,22 +23,8 @@ def search():
     print(query)
     sortedIndices = site_search(query)
     results = [df.iloc[idx] for idx in sortedIndices]
-    genres = [df.iloc[idx]["genres"] for idx in sortedIndices]
-    
-    # Create the pie chart  
-    flatGenres = []  
-    for row in genres:
-        flatGenres.extend(row) # merge all lists in one 
-    count_ = Counter(flatGenres) # count the number of genres 
-    fig, ax = plt.subplots(figsize=(10, 7))
-    ax.pie(count_.values(), labels=count_.keys(), startangle = 90, colors=sns.color_palette('Set2'))
-    
-    # Convert the pie chart to an image
-    img = io.BytesIO() 
-    plt.savefig(img, format="png") # temporarily store the image in byte stream 
-    img.seek(0)
-    plt.close(fig)  # close to free memory
-    img64 = base64.b64encode(img.getvalue()).decode('utf-8') # encode the imagine in base64; allows it to be enbedded in HTML without creating a separate file for it
+    fig, genrePie = plot_pie(df, sortedIndices)
+    img64 = create_image(fig, genrePie)
     
     return render_template('results.html', query = query, results = results, plot = img64)
 
@@ -56,7 +42,7 @@ def display_book(id):
     book = next((book for book in books if book['id'] == id), 'None')
 
     # Grab roberta classifier
-    classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
+    classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
 
     # Run classifier on review of book and generate plot of its top five moods
     model_outputs = classifier(book['review'])[0]

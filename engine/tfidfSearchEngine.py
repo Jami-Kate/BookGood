@@ -6,11 +6,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 import pandas as pd
 import json
-import matplotlib.pyplot as plt
-from collections import Counter
-import seaborn as sns
-import io
-import base64
 
 def load_data(filepath="./data/data.json"):
     """Loads and extracts titles and first paragraphs from the data."""
@@ -53,7 +48,7 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         return sortedIndices
         
     # Find closest matches
-    matchingIndices = np.where(results > 0.0)[0]
+    matchingIndices = np.where(results > 0.0)[0]  
     sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]]
 
     if len(sortedIndices) == 0:
