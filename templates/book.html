@@ -15,7 +15,7 @@
     <ul class="list-group list-group-horizontal">
         {% for genre in book['genres'] %}
         <li class="list-group-item">
-            {{genre}}
+            <a href="{{ url_for('display_genres', genre=genre) }}" class="">{{ genre }}</a>
         </li>
         {% endfor %}
     </ul>

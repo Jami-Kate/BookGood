@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+{{ genre }} Books
+{% endblock %}
+
+{% block content %} 
+    {% if books %}
+    <h2 class="mb-3">Books in the '{{ genre }}' genre</h2>
+    <div class="row row-col-4">
+      {% for book in books %}
+      <div class="col mb-4">
+          <div class="card h-100" style="width: 18rem;">
+              <div class="card-body">
+                <h5 class="card-title">{{ book['title'] }}</h5>
+                <ul class="list-group list-group-flush">
+                  {% for genre in book['genres'] %}
+                  <li class="list-group-item">{{ genre }}</li>
+                  {% endfor %}
+                </ul>
+                <p class="card-text">{{ book['review'][:100] + '...' }}</p>
+              </div>
+              <div class="card-footer">
+                <a href="{{ url_for('display_book', id=book['id']) }}" class="">See more</a>
+              </div>
+          </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+        <h2>No books found for the genre '{{ genre }}'</h2>
+    {% endif %}
+
+    <a href="{{ url_for('home') }}">back</a>
+{% endblock %}
