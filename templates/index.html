@@ -4,17 +4,20 @@ BookGood
 {% endblock %}
 
 {% block content %}
-   <div class="container">
-    
-    <div class="container">
-        <form action="/tfidf">
-            <div class="mb-3">
-                <h2 class="mb-3">Search for a book</h2>
-                <input type="text" placeholder="What are you looking for?" name="tf-idf-query" class="form-control">
+   <div class="row fillOut indexBkgrnd">
+            <div class = "col"></div>
+            <div class = "col-md-8 d-flex">
+               <!-- <div class = "d-flex align-items-center">-->
+                    <div class = "align-self-center flex-grow-1 searchBox">
+                    <form action="/tfidf">
+                        <div class="mb-3">
+                            <h1 class="mb-3">Search for a book</h2>
+                            <input type="text" placeholder="Try &quot;intense&quot; or &quot;romantic&quot; " name="tf-idf-query" class="form-control inputFont">
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-search">Search</button>
+                    </form>
+                </div>
             </div>
-            
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
+            <div class = "col"></div>
    </div>
     {% endblock %}
