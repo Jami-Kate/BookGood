@@ -46,6 +46,10 @@ def display_book(id):
     mood64 = create_image(mood_fig, mood_img)
     return render_template('book.html', book = book, mood = mood64)
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.errorhandler(404)
 def redirect(e):
     return render_template('err.html', e = e)
