@@ -46,5 +46,3 @@ def get_mood(text):
     json_text = pd.DataFrame(results).mean().to_json()
     final_score = json.loads(json_text)
     return final_score
-
-print(get_mood('what\'s up nerds'))
