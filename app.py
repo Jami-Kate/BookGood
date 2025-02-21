@@ -36,8 +36,6 @@ def display_book(id):
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')
 
-    #TODO: redirect for 404 errors
-
     # Grab roberta classifier
     classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
     
