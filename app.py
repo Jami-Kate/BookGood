@@ -42,7 +42,7 @@ def display_book(id):
     book = next((book for book in books if book['id'] == id), 'None')
 
     # Grab roberta classifier
-    classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", top_k=None)
+    classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
 
     # Run classifier on review of book and generate plot of its top five moods
     model_outputs = classifier(book['review'])[0]
