@@ -1,3 +1,89 @@
 .not-yet {
     display:none
 }
+
+.header {
+    background-color: #435c2b;
+    color: #fff;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 800;
+    padding: 4px;
+  }
+
+.testing {
+    background-color:pink;
+} 
+
+.nav-link {
+    color: #fff;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+}
+
+.nav-link:hover {
+    color: #eec02e;
+}
+  
+.logo {
+    max-width: 100px;
+    padding: 5px;
+  }
+
+.fullHeight {
+    height: 90vh;
+}
+
+.fillOut {
+    height: 100%;
+}
+
+.indexBkgrnd {
+    background-image: url("../bookCase.jpg");
+    background-repeat: repeat;
+}
+
+.searchBox {
+    background-color: #435c2b;
+    border-radius: 25px;
+    color: #fff;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    padding: 30px;
+    filter: opacity(100%);
+}
+
+.btn-search {
+    color: #fff;
+    border-color:#fff;
+    border-width: 2px;
+    background-color: #435c2b;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    margin-right: 10px;
+    float: right;
+}
+
+.btn-search:hover {
+    background-color: #eec02e;
+    border-color:#fff;
+}
+
+.inputFont {
+    font-family: sans-serif;
+}
+
+.backButton {
+    background-color: #435c2b;
+    border-radius: 8px;
+    color: #fff;
+    padding: 2px;
+    margin-top: 1%;
+    margin-bottom: 1%;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}

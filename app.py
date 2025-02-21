@@ -35,8 +35,7 @@ def display_book(id):
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
-    book = next((book for book in books if book['id'] == id), 'None')
-
+    book = next((book for book in books if book['id'] == id), 'None')    
     # Grab roberta classifier
     classifier = pipeline(task="text-classification", model="SamLowe/roberta-base-go_emotions", max_length = 512, top_k=None)
     
@@ -52,6 +51,14 @@ def display_book(id):
 @app.route('/about')
 def about():
     return render_template('about.html')
+    
+@app.route("/genres/<genre>")
+def display_genres(genre):
+    with open('./data/data.json','r') as f:
+        books = json.load(f)
+        books = books['books']
+    queryGenres = [book for book in books if genre in book['genres']]
+    return render_template('genres.html', genre=genre, books=queryGenres)
 
 @app.errorhandler(404)
 def redirect(e):
