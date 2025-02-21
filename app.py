@@ -60,6 +60,7 @@ def display_book(id):
 @app.route('/about')
 def about():
     return render_template('about.html')
+    
 @app.route("/genres/<genre>")
 def display_genres(genre):
     with open('./data/data.json','r') as f:
