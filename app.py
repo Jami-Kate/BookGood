@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request
+from flask import Flask, render_template, flash, redirect, request, url_for
 from engine.tfidfSearchEngine import site_search, df
 import json
 from engine.plotMood import plot_moods
@@ -10,11 +10,15 @@ app = Flask(__name__, static_url_path='/static')
 
 @app.route('/') # Gets you to homepage
 def home():
-    return render_template('index.html')
+    msg = request.args.get('msg')
+    return render_template('index.html', msg = msg)
 
 @app.route('/tfidf') # Perform TF/IDF search and load results
 def search():
     query = request.args.get('tf-idf-query')
+    if not query:
+        msg = 'cmon you gotta enter something'
+        return redirect(url_for('home', msg = msg))
     print(query)
     sortedIndices = site_search(query)
     try:
@@ -22,7 +26,8 @@ def search():
         fig, genrePie = plot_pie(df, sortedIndices)
         img64 = create_image(fig, genrePie)
     except:
-        return redirect('/')
+        msg = f'weh woh nothing found for {query}'
+        return redirect(url_for('home', msg = msg))
     return render_template('results.html', query = query, results = results, plot = img64)
 
 @app.route('/book/<id>') # Show particular book

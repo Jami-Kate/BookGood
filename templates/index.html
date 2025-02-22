@@ -16,6 +16,11 @@ BookGood
                         </div>
                         <button type="submit" class="btn btn-primary btn-search">Search</button>
                     </form>
+                    {% if msg %}
+                    <div>
+                        {{msg}}
+                    </div>
+                    {% endif %}
                 </div>
             </div>
             <div class = "col"></div>
