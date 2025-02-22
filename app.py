@@ -1,12 +1,37 @@
 from flask import Flask, render_template, flash, redirect, request, url_for
-from engine.tfidfSearchEngine import site_search, df
 import json
 from engine.plotMood import plot_moods
 from engine.createImage import create_image
 from engine.plotPie import plot_pie
 from engine.getMood import get_mood
+from engine.bookRetrieval import *
+from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
 
 app = Flask(__name__, static_url_path='/static')
+
+starting_up = True
+
+@app.before_request
+def load_json():
+    global starting_up
+    if starting_up:
+        print('fetching links')
+        book_links()
+        print('loading json')
+        ind = first_retrieval()
+        while ind: 
+            ind = retrieve_more()
+            print(f'retrieved {ind}')
+
+        with open('static/data/data.json','r') as f:
+            books = json.load(f)
+            books = books['books']
+        print(f'length: {len(books)}')
+
+        starting_up = False
+    else:
+        print('json already loaded')
+
 
 @app.route('/') # Gets you to homepage
 def home():
@@ -20,7 +45,10 @@ def search():
         msg = 'cmon you gotta enter something'
         return redirect(url_for('home', msg = msg))
     print(query)
-    sortedIndices = site_search(query)
+    df = load_data()
+    df = clean_text(df)
+    vectorizer, tfidfMatrix = vectorize_data(df)
+    sortedIndices = search_query(query, df, vectorizer, tfidfMatrix)
     try:
         results = [df.iloc[idx] for idx in sortedIndices]
         fig, genrePie = plot_pie(df, sortedIndices)
@@ -33,13 +61,14 @@ def search():
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
     # Open books json file
-    with open('./data/data.json','r') as f:
+    with open('static/data/data.json','r') as f:
         books = json.load(f)
         books = books['books']
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
+    print(book)
    
     mood = get_mood(book['review'])
     mood_fig, mood_img = plot_moods(mood)
