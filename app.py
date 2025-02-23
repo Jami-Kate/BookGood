@@ -7,6 +7,7 @@ from engine.getMood import get_mood, next_mood_batch, first_mood_batch
 from engine.bookRetrieval import *
 from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
 from threading import Thread
+import time
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -16,23 +17,34 @@ starting_up = True # Make sure data.json is only refreshed when the app starts u
 book_status = 0
 mood_status = 0
 
-def load_json():
+def load_moods():
+    global book_status
+    global mood_status
+    print('loading moods')
+    mood_status = first_mood_batch() 
+    while mood_status:
+        if mood_status >= book_status:
+            time.sleep(1)
+        mood_status = next_mood_batch(mood_status)
+    mood_status = 150
+    print('moods loaded')
+
+def load_books():
     global book_status
     global mood_status
     print('fetching links')
     book_links() # Grab book links
     print('loading books')
     book_status = first_retrieval() # Retrieve first 30 books and set book_status to 30
+    m = Thread(target=load_moods)
+    m.start()
+    m.join()
     while book_status: 
         book_status = retrieve_more() # Retrieve books in chunks of 30 until 150 is reached
     book_status = 150 # Set status to 150 and stop retrieving
+    
     print('books loaded')
     # Same deal with moods
-    mood_status = first_mood_batch() 
-    while mood_status:
-        mood_status = next_mood_batch(mood_status)
-    mood_status = 150
-    print('moods loaded')
     
 
 # Runs before every API request to see if it needs to load data.json (i.e. this is the first request)
@@ -51,8 +63,9 @@ def check_data():
         if os.path.exists("static/data/data.json"):
             os.remove("static/data/data.json")
 
-        t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
+        t = Thread(target = load_books) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
         t.start()
+        t.join()
     else:
         print(f'{book_status} books loaded; {mood_status} moods loaded')
 
