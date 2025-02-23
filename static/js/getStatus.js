@@ -11,15 +11,22 @@ async function getStatus() {
     console.error("Error: ", e);
   }
   
-  document.getElementById("status").innerHTML = get.status / 1.5 + "&percnt;";
+  document.getElementById("book-status").innerHTML = `loading books: ${get.book_status / 1.5 + "&percnt;"}`;
+  document.getElementById("mood-status").innerHTML = `loading moods: ${get.mood_status / 1.5 + "&percnt;"}`;
   
-  if (get.status == 150){
-    document.getElementById("status").innerHTML += " Done.";
+  if (get.book_status == 150){
+    document.getElementById("book-status").innerHTML = "Books loaded";
+    clearTimeout(timeout);
+    return false;
+  }
+
+  if (get.mood_status == 150){
+    document.getElementById("book-status").innerHTML = "Books loaded";
     clearTimeout(timeout);
     return false;
   }
    
-  timeout = setTimeout(getStatus, 1000);
+  timeout = setTimeout(getStatus, 2000);
 }
 
     getStatus();

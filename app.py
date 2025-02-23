@@ -11,33 +11,35 @@ from threading import Thread
 app = Flask(__name__, static_url_path='/static')
 
 starting_up = True
-status = 0
+book_status = 0
+mood_status = 0
 
 def load_json():
     global starting_up
-    global status
+    global book_status
+    global mood_status
     if starting_up:
         starting_up = False
         print('fetching links')
         book_links()
         print('loading json')
-        print(status)
-        status = first_retrieval()
-        while status: 
-            status = retrieve_more()
-        status = 150
+        print(book_status)
+        book_status = first_retrieval()
+        while book_status: 
+            book_status = retrieve_more()
+        book_status = 150
         print('books loaded')
     else:
         print('json already loaded')
 
 @app.route('/') # Gets you to homepage
 def home():
-    global status
+    global book_status
+    global mood_status
     t = Thread(target = load_json)
     t.start()
-    print(status)
     msg = request.args.get('msg')
-    return render_template('index.html', msg = msg, status = status)
+    return render_template('index.html', msg = msg)
 
 @app.route('/tfidf') # Perform TF/IDF search and load results
 def search():
@@ -92,7 +94,7 @@ def display_genres(genre):
 
 @app.route('/status')
 def get_status():
-    statusList = {'status':status}
+    statusList = {'book_status':book_status, 'mood_status':mood_status}
     return json.dumps(statusList)
 
 @app.errorhandler(404)
