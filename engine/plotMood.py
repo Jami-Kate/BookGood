@@ -8,11 +8,6 @@ def plot_moods(book):
     labels = list(book.keys())
     scores = list(book.values())
 
-    print(labels)
-    print(scores)
-
-    print(f'labels: {len(labels)}; scores: {len(scores)}')
-
     # Hacky stuff to make a circular graph work
     scores += scores[:1]
     angles = [n / float(N) * 2 * pi for n in range(N)]

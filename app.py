@@ -69,11 +69,11 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
-    print(book)
-    
-   
-    mood = get_mood(book['review'])
-    mood_fig, mood_img = plot_moods(mood)
+
+    if 'mood' not in book.keys():
+        book['mood'] = get_mood(book['review'])
+
+    mood_fig, mood_img = plot_moods(book['mood'])
     mood64 = create_image(mood_fig, mood_img)
 
     return render_template('book.html', book = book, mood = mood64)
