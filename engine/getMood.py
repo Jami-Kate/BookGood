@@ -48,5 +48,17 @@ def get_mood(text, n = 5):
     final_score = json.loads(json_text)
     return dict(list(final_score.items())[:n])
 
-def get_batch(books, ind):
-    return
+def mood_batch(ind, incr = 5):
+    books = open('static/data/data.json')
+    books = json.load(books)['books']
+
+    for book in books[ind:(ind + incr)]:
+        if 'mood' not in book:
+            mood = get_mood(book['review'])
+            book.update({"mood": mood})
+            book = json.dumps(book)
+    print('testing')
+    print(book)
+
+
+mood_batch(0, 1)
