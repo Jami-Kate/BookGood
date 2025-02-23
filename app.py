@@ -17,36 +17,44 @@ book_status = 0
 mood_status = 0
 
 def load_json():
-    global starting_up
     global book_status
     global mood_status
-    if starting_up:
-        starting_up = False
-        print('fetching links')
-        book_links() # Grab book links
-        print('loading books')
-        book_status = first_retrieval() # Retrieve first 30 books and set book_status to 30
-        while book_status: 
-            book_status = retrieve_more() # Retrieve books in chunks of 30 until 150 is reached
-        book_status = 150 # Set status to 150 and stop retrieving
-        print('books loaded')
-        # Same deal with moods
-        mood_status = first_mood_batch() 
-        while mood_status:
-            mood_status = next_mood_batch(mood_status)
-        mood_status = 150
-        print('moods loaded')
-    else:
-        print(f'{book_status} books loaded; {mood_status} moods loaded')
+    print('fetching links')
+    book_links() # Grab book links
+    print('loading books')
+    book_status = first_retrieval() # Retrieve first 30 books and set book_status to 30
+    while book_status: 
+        book_status = retrieve_more() # Retrieve books in chunks of 30 until 150 is reached
+    book_status = 150 # Set status to 150 and stop retrieving
+    print('books loaded')
+    # Same deal with moods
+    mood_status = first_mood_batch() 
+    while mood_status:
+        mood_status = next_mood_batch(mood_status)
+    mood_status = 150
+    print('moods loaded')
+    
 
 # Runs before every API request to see if it needs to load data.json (i.e. this is the first request)
 @app.before_request
 def check_data():
-    global book_status
-    global mood_status
-    t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load
-    t.start()
+    global starting_up
+    if starting_up: 
+        starting_up = False
 
+        global book_status
+        global mood_status
+
+        # Delete old json files
+        if os.path.exists("static/data/links.json"):
+            os.remove("static/data/links.json")
+        if os.path.exists("static/data/data.json"):
+            os.remove("static/data/data.json")
+
+        t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
+        t.start()
+    else:
+        print(f'{book_status} books loaded; {mood_status} moods loaded')
 
 @app.route('/') # Gets you to homepage
 def home():
