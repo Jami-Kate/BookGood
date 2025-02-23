@@ -10,7 +10,9 @@ from threading import Thread
 
 app = Flask(__name__, static_url_path='/static')
 
-starting_up = True
+starting_up = True # Make sure data.json is only refreshed when the app starts up
+
+# Keep track of how many books/moods have been loaded
 book_status = 0
 mood_status = 0
 
@@ -21,14 +23,15 @@ def load_json():
     if starting_up:
         starting_up = False
         print('fetching links')
-        book_links()
+        book_links() # Grab book links
         print('loading books')
-        book_status = first_retrieval()
+        book_status = first_retrieval() # Retrieve first 30 books and set book_status to 30
         while book_status: 
-            book_status = retrieve_more()
-        book_status = 150
+            book_status = retrieve_more() # Retrieve books in chunks of 30 until 150 is reached
+        book_status = 150 # Set status to 150 and stop retrieving
         print('books loaded')
-        mood_status = first_mood_batch()
+        # Same deal with moods
+        mood_status = first_mood_batch() 
         while mood_status:
             mood_status = next_mood_batch(mood_status)
         mood_status = 150
@@ -36,11 +39,12 @@ def load_json():
     else:
         print(f'{book_status} books loaded; {mood_status} moods loaded')
 
+# Runs before every API request to see if it needs to load data.json (i.e. this is the first request)
 @app.before_request
 def check_data():
     global book_status
     global mood_status
-    t = Thread(target = load_json)
+    t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load
     t.start()
 
 
@@ -80,6 +84,7 @@ def display_book(id):
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
 
+    # Runs get_mood on a book if its mood hasn't already been filled in
     if 'mood' not in book.keys():
         book['mood'] = get_mood(book['review'])
 
@@ -100,6 +105,7 @@ def display_genres(genre):
     queryGenres = [book for book in books if genre in book['genres']]
     return render_template('genres.html', genre=genre, books=queryGenres)
 
+# Gets status of book and mood retrieval to update the user in real time
 @app.route('/status')
 def get_status():
     statusList = {'book_status':book_status, 'mood_status':mood_status}
