@@ -6,37 +6,38 @@ from engine.plotPie import plot_pie
 from engine.getMood import get_mood
 from engine.bookRetrieval import *
 from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
+from threading import Thread
 
 app = Flask(__name__, static_url_path='/static')
 
 starting_up = True
+status = 0
 
-@app.before_request
 def load_json():
     global starting_up
+    global status
     if starting_up:
+        starting_up = False
         print('fetching links')
         book_links()
         print('loading json')
-        ind = first_retrieval()
-        while ind: 
-            ind = retrieve_more()
-            print(f'retrieved {ind}')
-
-        with open('static/data/data.json','r') as f:
-            books = json.load(f)
-            books = books['books']
-        print(f'length: {len(books)}')
-
-        starting_up = False
+        print(status)
+        status = first_retrieval()
+        while status: 
+            status = retrieve_more()
+        status = 150
+        print('books loaded')
     else:
         print('json already loaded')
 
-
 @app.route('/') # Gets you to homepage
 def home():
+    global status
+    t = Thread(target = load_json)
+    t.start()
+    print(status)
     msg = request.args.get('msg')
-    return render_template('index.html', msg = msg)
+    return render_template('index.html', msg = msg, status = status)
 
 @app.route('/tfidf') # Perform TF/IDF search and load results
 def search():
@@ -69,6 +70,7 @@ def display_book(id):
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
     print(book)
+    
    
     mood = get_mood(book['review'])
     mood_fig, mood_img = plot_moods(mood)
@@ -88,10 +90,14 @@ def display_genres(genre):
     queryGenres = [book for book in books if genre in book['genres']]
     return render_template('genres.html', genre=genre, books=queryGenres)
 
+@app.route('/status')
+def get_status():
+    statusList = {'status':status}
+    return json.dumps(statusList)
+
 @app.errorhandler(404)
 def err(e):
     return render_template('err.html', e = e)
-
 
 if __name__ == "__main__":
     print('watching. waiting')

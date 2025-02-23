@@ -47,3 +47,6 @@ def get_mood(text, n = 5):
     json_text = pd.DataFrame(results).mean().to_json()
     final_score = json.loads(json_text)
     return dict(list(final_score.items())[:n])
+
+def get_batch(books, ind):
+    return
