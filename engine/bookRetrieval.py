@@ -77,7 +77,7 @@ def get_book(book_url):
         i += 1
 
     '''Returns in a format for JSON'''
-    return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review}
+    return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review, 'mood' : None}
 
 
 '''Helper Function to put new books and metadata into the data.json file'''
@@ -161,9 +161,9 @@ def retrieve_more():
     #stop when we're at 30 books more
     endInd = ind + 30
 
-    #is json num entries is >= 150
+    #is json num entries is >= 150 (had to change this to 149 for my own dastardly ends -ED)
     #we've got all the data
-    if ind >= 150:
+    if ind >= 149:
         return
     
     #helper var to store retrieved data

@@ -2,6 +2,7 @@ from transformers import pipeline
 from transformers import AutoTokenizer, pipeline
 import torch
 import pandas as pd
+import os
 import json
 
 def get_mood(text, n = 5):
@@ -48,17 +49,45 @@ def get_mood(text, n = 5):
     final_score = json.loads(json_text)
     return dict(list(final_score.items())[:n])
 
-def mood_batch(ind, incr = 5):
-    books = open('static/data/data.json')
-    books = json.load(books)['books']
+def first_mood_batch(incr = 15):
+    f = 'static/data/data.json'
+    file = open(f)
+    data = json.load(file)
+    meta = data['metadata']
+    books = data['books']
 
-    for book in books[ind:(ind + incr)]:
-        if 'mood' not in book:
-            mood = get_mood(book['review'])
-            book.update({"mood": mood})
-            book = json.dumps(book)
-    print('testing')
-    print(book)
+    end_ind = incr
+
+    for book in books[:end_ind]:
+        if not book['mood']:
+            book['mood'] = get_mood(book['review'])
+    os.remove(f)
+    data = {'metadata': meta, 'books': books}
+
+    file = open(f, 'w')
+    json.dump(data, file, indent = 4)
+    return end_ind
 
 
-# mood_batch(0, 1)
+def next_mood_batch(ind, incr = 15):
+    f = 'static/data/data.json'
+    file = open(f)
+    data = json.load(file)
+    meta = data['metadata']
+    books = data['books']
+
+    end_ind = ind + incr
+
+    if ind >= 150:
+        return ind
+    for book in books[ind:end_ind]:
+        if not book['mood']:
+            book['mood'] = get_mood(book['review'])
+
+    os.remove(f)
+    data = {'metadata': meta, 'books' : books}
+
+    file = open(f, 'w')
+    json.dump(data, file, indent = 4)
+
+    return end_ind

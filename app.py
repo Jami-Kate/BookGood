@@ -3,7 +3,7 @@ import json
 from engine.plotMood import plot_moods
 from engine.createImage import create_image
 from engine.plotPie import plot_pie
-from engine.getMood import get_mood
+from engine.getMood import get_mood, next_mood_batch, first_mood_batch
 from engine.bookRetrieval import *
 from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
 from threading import Thread
@@ -22,22 +22,30 @@ def load_json():
         starting_up = False
         print('fetching links')
         book_links()
-        print('loading json')
-        print(book_status)
+        print('loading books')
         book_status = first_retrieval()
         while book_status: 
             book_status = retrieve_more()
         book_status = 150
         print('books loaded')
+        mood_status = first_mood_batch()
+        while mood_status:
+            mood_status = next_mood_batch(mood_status)
+        mood_status = 150
+        print('moods loaded')
     else:
-        print('json already loaded')
+        print(f'{book_status} books loaded; {mood_status} moods loaded')
 
-@app.route('/') # Gets you to homepage
-def home():
+@app.before_request
+def check_data():
     global book_status
     global mood_status
     t = Thread(target = load_json)
     t.start()
+
+
+@app.route('/') # Gets you to homepage
+def home():
     msg = request.args.get('msg')
     return render_template('index.html', msg = msg)
 
