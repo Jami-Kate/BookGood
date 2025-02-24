@@ -1,4 +1,4 @@
-from flask import Flask, render_template, flash, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for
 import json
 from engine.plotMood import plot_moods
 from engine.createImage import create_image
@@ -7,6 +7,7 @@ from engine.getMood import get_mood, next_mood_batch, first_mood_batch
 from engine.bookRetrieval import *
 from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
 from threading import Thread
+from time import sleep
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -87,6 +88,11 @@ def search():
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
     # Open books json file
+
+    # Halt execution if data.json has been deleted and wait for it to come back
+    while not os.path.exists("static/data/links.json"):
+        sleep(.5)
+
     with open('static/data/data.json','r') as f:
         books = json.load(f)
     books = books['books']
