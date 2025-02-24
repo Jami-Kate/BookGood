@@ -61,9 +61,9 @@ def first_mood_batch(incr = 15):
     for book in books[:end_ind]:
         if not book['mood']:
             book['mood'] = get_mood(book['review'])
-    os.remove(f)
+    
     data = {'metadata': meta, 'books': books}
-
+    os.remove(f)
     file = open(f, 'w')
     json.dump(data, file, indent = 4)
     return end_ind
@@ -84,9 +84,9 @@ def next_mood_batch(ind, incr = 15):
         if not book['mood']:
             book['mood'] = get_mood(book['review'])
 
-    os.remove(f)
+    
     data = {'metadata': meta, 'books' : books}
-
+    os.remove(f)
     file = open(f, 'w')
     json.dump(data, file, indent = 4)
 

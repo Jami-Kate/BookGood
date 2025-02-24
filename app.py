@@ -64,6 +64,9 @@ def home():
 @app.route('/tfidf') # Perform TF/IDF search and load results
 def search():
     query = request.args.get('tf-idf-query')
+    if not os.path.exists("static/data/data.json"):
+        msg = 'give me a second'
+        return redirect(url_for('home', msg = msg))
     if not query:
         msg = 'cmon you gotta enter something'
         return redirect(url_for('home', msg = msg))
@@ -86,14 +89,14 @@ def display_book(id):
     # Open books json file
     with open('static/data/data.json','r') as f:
         books = json.load(f)
-        books = books['books']
+    books = books['books']
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
 
     # Runs get_mood on a book if its mood hasn't already been filled in
-    if 'mood' not in book.keys():
+    if book['mood'] == None:
         book['mood'] = get_mood(book['review'])
 
     mood_fig, mood_img = plot_moods(book['mood'])

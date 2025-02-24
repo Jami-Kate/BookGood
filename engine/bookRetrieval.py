@@ -161,9 +161,9 @@ def retrieve_more():
     #stop when we're at 30 books more
     endInd = ind + 30
 
-    #is json num entries is >= 150 (had to change this to 149 for my own dastardly ends -ED)
+    #is json num entries is >= 150
     #we've got all the data
-    if ind >= 149:
+    if ind >= 150:
         return
     
     #helper var to store retrieved data
