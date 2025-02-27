@@ -34,6 +34,25 @@ def vectorize_data(df):
     
     return vectorizer, booleanMatrix
 
+
+def remove_repeated_words(text):
+    return " ".join(dict.fromkeys(text.split()))  # keeps only first occurrence
+
+
+def correct_query(query):
+    modelPath = "ai-forever/T5-large-spell"
+    model = T5ForConditionalGeneration.from_pretrained(modelPath)
+    tokenizer = AutoTokenizer.from_pretrained(modelPath)
+
+    encodings = tokenizer(query, return_tensors="pt")
+    generatedTokens = model.generate(**encodings)  
+
+    correctedQuery = tokenizer.batch_decode(generatedTokens, skip_special_tokens=True)[0]
+    cleanedQuery = remove_repeated_words(correctedQuery)
+
+    return cleanedQuery
+
+
 def query_search(query, vectorizer, booleanMatrix):
     """Search using Boolean logic."""
     query = correct_query(query)
