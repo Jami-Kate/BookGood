@@ -10,7 +10,7 @@ import pandas as pd
 import json
 from transformers import pipeline
 
-def load_data(filepath="./data/data.json"):
+def load_data(filepath="static/data/data.json"):
     with open(filepath,'r') as f:
         data = json.load(f)
 
