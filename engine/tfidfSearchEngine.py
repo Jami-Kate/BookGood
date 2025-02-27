@@ -46,9 +46,9 @@ def correct_query(query):
     tokenizer = AutoTokenizer.from_pretrained(modelPath)
 
     encodings = tokenizer(query, return_tensors="pt")
-    generated_tokens = model.generate(**encodings)  
+    generatedTokens = model.generate(**encodings)  
 
-    correctedQuery = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
+    correctedQuery = tokenizer.batch_decode(generatedTokens, skip_special_tokens=True)[0]
     cleanedQuery = remove_repeated_words(correctedQuery)
 
     return cleanedQuery
