@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from engine.tfidfSearchEngine import site_search, df
+from engine.tfidfSearchEngine import site_search, df, correct_query
 import json
 import matplotlib
 matplotlib.use('Agg')
@@ -17,18 +17,16 @@ app = Flask(__name__, static_url_path='/static')
 def home():
     return render_template('index.html')
 
-@app.route('/tfidf') # Perform TF/IDF search and load results
+@app.route('/tfidf')
 def search():
     query = request.args.get('tf-idf-query')
-    print(query)
+    query = correct_query(query)
     sortedIndices = site_search(query)
     results = [df.iloc[idx] for idx in sortedIndices]
     fig, genrePie = plot_pie(df, sortedIndices)
     img64 = create_image(fig, genrePie)
     
     return render_template('results.html', query = query, results = results, plot = img64)
-
-    #TODO: load additional results
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):

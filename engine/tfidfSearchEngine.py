@@ -3,13 +3,13 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
+from transformers import T5ForConditionalGeneration, AutoTokenizer, AutoModelForSeq2SeqLM
 import numpy as np
 import pandas as pd
 import json
+from transformers import pipeline
 
 def load_data(filepath="./data/data.json"):
-    """Loads and extracts titles and first paragraphs from the data."""
-    
     with open(filepath,'r') as f:
         data = json.load(f)
 
@@ -35,16 +35,38 @@ def vectorize_data(df):
     
     return vectorizer, tfidfMatrix
 
+
+def remove_repeated_words(text):
+    return " ".join(dict.fromkeys(text.split()))  # keeps only first occurrence
+
+
+def correct_query(query):
+    modelPath = "ai-forever/T5-large-spell"
+    model = T5ForConditionalGeneration.from_pretrained(modelPath)
+    tokenizer = AutoTokenizer.from_pretrained(modelPath)
+
+    encodings = tokenizer(query, return_tensors="pt")
+    generated_tokens = model.generate(**encodings)  
+
+    correctedQuery = tokenizer.batch_decode(generated_tokens, skip_special_tokens=True)[0]
+    cleanedQuery = remove_repeated_words(correctedQuery)
+
+    return cleanedQuery
+
+
 def search_query(query, df, vectorizer, tfidfMatrix):
     """Searches articles and prints the results."""
+    query = correct_query(query)
+    query = remove_repeated_words(query)  
+
     queryVec = vectorizer.transform([query])
     results = cosine_similarity(tfidfMatrix, queryVec).reshape((-1,))
     
     # Find exact title matches
     exactMatches = df.loc[df[["title", "author"]].apply(lambda x: query.lower() in x.str.lower().values, axis=1)]
     if not exactMatches.empty:
-        matchingIndices = exactMatches.index.to_numpy() # extract match indices as a numpy array
-        sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] # sort indices by cosine similarity 
+        matchingIndices = exactMatches.index.to_numpy() 
+        sortedIndices = matchingIndices[np.argsort(results[matchingIndices])[::-1]] 
         return sortedIndices
         
     # Find closest matches
@@ -56,7 +78,8 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         return
     
     return sortedIndices
-    
+
+
 df = load_data()
 df = clean_text(df)
 vectorizer, tfidfMatrix = vectorize_data(df)
