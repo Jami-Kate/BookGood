@@ -51,7 +51,7 @@ def check_data():
         # Delete old json files
         if os.path.exists("static/data/links.json"):
             os.remove("static/data/links.json")
-        #if os.path.exists("static/data/data.json"):
+        #if os.path.exists("static/data/data.json"): # commented this out for now because the search engine breaks otherwise ; FIX LATER
         #    os.remove("static/data/data.json")
 
         t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
@@ -118,7 +118,6 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')    
-
     # Runs get_mood on a book if its mood hasn't already been filled in
     if book['mood'] == None:
         book['mood'] = get_mood(book['review'])
