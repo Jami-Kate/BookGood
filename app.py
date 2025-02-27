@@ -1,5 +1,7 @@
 from flask import Flask, render_template, request
 from engine.tfidfSearchEngine import site_search, df, correct_query
+from engine.booleanSearchEngine import boolean_search
+from engine.neuralSearchEngine import query_search
 import json
 import matplotlib
 matplotlib.use('Agg')
@@ -17,16 +19,26 @@ app = Flask(__name__, static_url_path='/static')
 def home():
     return render_template('index.html')
 
-@app.route('/tfidf')
+@app.route('/search')
 def search():
-    query = request.args.get('tf-idf-query')
-    query = correct_query(query)
-    sortedIndices = site_search(query)
+    query = request.args.get('query')
+    search_type = request.args.get('search_type') 
+    query = correct_query(query)  
+    if search_type == "tfidf":
+        sortedIndices = site_search(query)  # TF-IDF search function
+    elif search_type == "neural":
+        sortedIndices = query_search(query) # neural search 
+    else:
+        sortedIndices = boolean_search(query)  # Boolean search function
+
     results = [df.iloc[idx] for idx in sortedIndices]
     fig, genrePie = plot_pie(df, sortedIndices)
     img64 = create_image(fig, genrePie)
-    
-    return render_template('results.html', query = query, results = results, plot = img64)
+    resultsNumber = len(results)
+
+    return render_template('results.html', query=query, results=results, plot=img64, resultsNumber=resultsNumber)
+
+
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):

@@ -7,7 +7,6 @@ from transformers import T5ForConditionalGeneration, AutoTokenizer, AutoModelFor
 import numpy as np
 import pandas as pd
 import json
-from transformers import pipeline
 
 def load_data(filepath="./data/data.json"):
     with open(filepath,'r') as f:
