@@ -12,12 +12,28 @@ BookGood
                     <form action="/tfidf">
                         <div class="mb-3">
                             <h1 class="mb-3">Search for a book</h2>
+
                             <input type="text" placeholder="Try &quot;intense&quot; or &quot;romantic&quot; " name="tf-idf-query" class="form-control inputFont">
                         </div>
                         <button type="submit" class="btn btn-primary btn-search">Search</button>
                     </form>
+                    {% if msg %}
+                    <div id="msg">
+                        {{msg}}
+                    </div>
+                    {% endif %}
+
+                    <ul class="list-group list-group-horizontal">
+                        <li class="list-group-item" id="book-status"></li>
+                        <li class="list-group-item" id="mood-status"></li>
+                        <li class="list-group-item d-none" id="ready">let's rock</li>
+                    </ul>
+
                 </div>
             </div>
             <div class = "col"></div>
    </div>
+   
     {% endblock %}
+
+    

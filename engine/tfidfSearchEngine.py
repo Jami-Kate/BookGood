@@ -7,7 +7,7 @@ import numpy as np
 import pandas as pd
 import json
 
-def load_data(filepath="./data/data.json"):
+def load_data(filepath="static/data/data.json"):
     """Loads and extracts titles and first paragraphs from the data."""
     
     with open(filepath,'r') as f:
@@ -56,10 +56,3 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         return
     
     return sortedIndices
-    
-df = load_data()
-df = clean_text(df)
-vectorizer, tfidfMatrix = vectorize_data(df)
-
-def site_search(query):
-    return search_query(query, df, vectorizer, tfidfMatrix)

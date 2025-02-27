@@ -34,11 +34,11 @@ def book_links():
         links.append('https://www.bookreporter.com' + link)
     
     '''If the link file already exists b/c of old runs, delete it'''
-    if os.path.exists("../data/links.json"):
-        os.remove("../data/links.json")
+    if os.path.exists("static/data/links.json"):
+        os.remove("static/data/links.json")
     
     '''Store the links in the links.json file'''
-    file = open('../data/links.json','w')
+    file = open('static/data/links.json','w')
 
     '''Stores the links in "links" and a helper "pointer" for which books have already been retrieved'''
     json.dump({"pointer": 0, "links": links}, file, indent = 4)
@@ -77,7 +77,7 @@ def get_book(book_url):
         i += 1
 
     '''Returns in a format for JSON'''
-    return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review}
+    return {'title' : title, 'author' : author, 'id' : hashedTitle, 'genres' : category, 'review' : review, 'mood' : None}
 
 
 '''Helper Function to put new books and metadata into the data.json file'''
@@ -85,8 +85,8 @@ def dumpToJSON(dataIn, metaIn):
     
     '''if the file already exists and has data, removes that data and stores it
        then it deletes the JSON to put in new data'''
-    if os.path.exists("../data/data.json"):
-        f = open('../data/data.json')
+    if os.path.exists("static/data/data.json"):
+        f = open('static/data/data.json')
         dataOut = json.load(f)
         #adds new books to the books section one-by-one
         bookHolder = dataOut['books']
@@ -95,14 +95,14 @@ def dumpToJSON(dataIn, metaIn):
         #store the sum of old & new info in dataOut
         dataOut = {'metadata': metaIn, 'books': bookHolder}
         #then deletes the old file
-        os.remove("../data/data.json")
+        os.remove("static/data/data.json")
         
     else:
         #ie if this is the first retrieval
         dataOut = {'metadata': metaIn, 'books': dataIn}
     
     #write to the file
-    file = open('../data/data.json','w')
+    file = open('static/data/data.json','w')
     json.dump(dataOut, file, indent = 4)
 
 '''to be called when the website first opens; deletes old json file, gets first 30 books' details to dump to JSON''' 
@@ -112,7 +112,7 @@ def first_retrieval():
     metaOut = {'genresTotal' : []}
 
     #retrieves the links
-    f = open('../data/links.json')
+    f = open('static/data/links.json')
     data = json.load(f)
     info = data['links']
     ind = data['pointer']
@@ -128,33 +128,33 @@ def first_retrieval():
         ind += 1
 
     #delete old json
-    if os.path.exists("../data/data.json"):
-        os.remove("../data/data.json")
+    if os.path.exists("static/data/data.json"):
+        os.remove("static/data/data.json")
     
     #write the data to the JSON
     dumpToJSON(bookDets, metaOut)
 
     #deletes old JSON to update with the new pointer
-    if os.path.exists("../data/links.json"):
-        os.remove("../data/links.json")
+    if os.path.exists("static/data/links.json"):
+        os.remove("static/data/links.json")
     
     #rewrites with pointer
-    file = open('../data/links.json','w')
+    file = open('static/data/links.json','w')
     json.dump({"pointer": ind, "links": info}, file, indent = 4)
 
-    return 
+    return ind
 
 '''called upon click of button to load more;
    retrieves 30 more books' details '''
 def retrieve_more():
     #retrieve links & pointer for location in book scraping
-    f = open('../data/links.json')
+    f = open('static/data/links.json')
     data = json.load(f)
     info = data['links']
     ind = data['pointer']
 
     #open the data file to recieve the list of genres thus far
-    fData = open('../data/data.json')
+    fData = open('static/data/data.json')
     fData = json.load(fData)
     metaOut = fData['metadata']
 
@@ -181,10 +181,10 @@ def retrieve_more():
     dumpToJSON(bookDets, metaOut)
 
     #update the pointer in links
-    if os.path.exists("../data/links.json"):
-        os.remove("../data/links.json")
-    file = open('../data/links.json','w')
+    if os.path.exists("static/data/links.json"):
+        os.remove("static/data/links.json")
+    file = open('static/data/links.json','w')
     json.dump({"pointer": ind, "links": info}, file, indent = 4)
 
-    return
+    return ind
 
