@@ -43,7 +43,7 @@ def search():
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
     # Open books json file
-    with open('./data/data.json','r') as f:
+    with open('static/data/data.json','r') as f:
         books = json.load(f)
         books = books['books']
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
