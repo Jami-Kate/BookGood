@@ -22,7 +22,9 @@ Results for {{query}}
               <h5 class="card-title">{{result['title']}}</h5>
               <ul class="list-group list-group-flush">
                 {% for genre in result['genres'] %}
-                <li class="list-group-item">{{genre}}</li>
+                <li class="list-group-item">
+                    <a href="{{ url_for('display_genres', genre=genre) }}" class="">{{ genre }}</a>
+                </li>
                 {% endfor %}
               </ul>
               <p class="card-text">{{result['review'][:100] + '...'}}</p>
