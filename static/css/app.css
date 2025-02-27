@@ -78,12 +78,145 @@
 
 .backButton {
     background-color: #435c2b;
-    border-radius: 8px;
+    border-radius: 5px;
     color: #fff;
-    padding: 2px;
+    padding: 6px;
     margin-top: 1%;
     margin-bottom: 1%;
     font-family: "EB Garamond", serif;
     font-optical-sizing: auto;
     font-weight: 400;
+}
+
+.fitPlot {
+    max-width: 100%;
+    height: auto;
+}
+
+.pageWide {
+    max-width: 100%;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
+h1 {
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 700;
+}
+
+h2 {
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 600;
+}
+
+.genres {
+    background-color: #435c2b;
+    border-radius: 5px;
+    color: #fff;
+    padding: 6px;
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    text-decoration-line: none;
+}
+
+.genres:hover {
+    background-color: #eec02e;
+    border-color:#fff;
+    color:#fff;
+}
+
+.genreBox {
+    border-width: 0px;
+}
+
+/*CARD MAKING*/
+
+.bookCardRows {
+    height:12000px;
+
+}
+
+.cardCarrier {
+    margin-bottom: 5px;
+}
+
+.bookCard {
+    color:#fff;
+    background-color: #435c2b;
+    border-style: solid;
+    border-width: 3px;
+    border-color: #eec02e;
+    font-family: "EB Garamond", serif;
+}
+
+
+.bookCardMain{
+    margin-left: 6%;
+    max-width: 92%;
+    border-left-width: 2px;
+    border-left-style: solid;
+    border-left-color: #eec02e;
+    height: 100%;
+    background-image: url(../bookBkGrd2.jpeg);
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-color: #435c2b;
+}
+
+.bookCardInner{
+    padding:7px;
+    padding-left:5px;
+    height:100%;
+    width:100%;
+}
+
+.bookCardTitle{
+    font-weight: 600;
+    padding-top: 6px;
+}
+
+.bookCardAuthor{
+    font-weight: 500;
+}
+
+.bookCardText{
+    font-weight: 400;
+    margin-bottom: 0%;
+    padding-left: 3px;
+    padding-right: 3px;
+}
+
+.bookCardItem{
+    color:#fff;
+}
+
+.bookCardLink {
+    color:#fff;
+    text-decoration-line: none;
+    margin-bottom: 0px;
+    border-color: #eec02e;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 3px;
+    padding:2px;
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.bookCardLink:hover {
+    color:#eec02e;
+}
+
+.bookCardGenreItem {
+    text-wrap: nowrap;
+    margin-left: 1px;
+    margin-right: 1px;
+}
+
+.bookCardGenreList {
+    width: 100%;
 }
