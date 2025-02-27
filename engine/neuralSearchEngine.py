@@ -8,7 +8,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
 
-def load_data(filepath="./data/data.json"):
+def load_data(filepath="static/data/data.json"):
     with open(filepath,'r') as f:
         data = json.load(f)
 
