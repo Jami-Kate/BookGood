@@ -65,6 +65,7 @@
     font-weight: 500;
     margin-right: 10px;
     float: right;
+    margin-top: 4px;
 }
 
 .btn-search:hover {
@@ -130,6 +131,12 @@ h2 {
 }
 
 .genreBox {
+    border-width: 0px;
+}
+
+.statusBox {
+    background-color: #435c2b;
+    color:#fff;
     border-width: 0px;
 }
 

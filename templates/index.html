@@ -5,7 +5,7 @@ BookGood
 
 {% block content %}
    <div class="row fillOut indexBkgrnd">
-            <div class = "col"></div>
+            <div class = "col-md-2"></div>
             <div class = "col-md-8 d-flex">
                <!-- <div class = "d-flex align-items-center">-->
                     <div class = "align-self-center flex-grow-1 searchBox">
@@ -30,15 +30,15 @@ BookGood
                     </div>
                     {% endif %}
 
-                    <ul class="list-group list-group-horizontal">
-                        <li class="list-group-item" id="book-status"></li>
-                        <li class="list-group-item" id="mood-status"></li>
-                        <li class="list-group-item d-none" id="ready">let's rock</li>
+                    <ul class="list-group list-group-horizontal" style="padding-top: 2px;">
+                        <li class="list-group-item statusBox" id="book-status"></li>
+                        <li class="list-group-item statusBox" id="mood-status"></li>
+                        <li class="list-group-item d-none statusBox" id="ready">let's rock</li>
                     </ul>
 
                 </div>
             </div>
-            <div class = "col"></div>
+            <div class = "col-md-2"></div>
    </div>
    
     {% endblock %}
