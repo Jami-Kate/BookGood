@@ -68,9 +68,9 @@ def query_search(query, vectorizer, booleanMatrix):
 
     return matchingIndices
 
-df = load_data()
-df = clean_text(df)
-vectorizer, booleanMatrix = vectorize_data(df)
+# df = load_data()
+# df = clean_text(df)
+# vectorizer, booleanMatrix = vectorize_data(df)
 
-def boolean_search(query):
-    return query_search(query, vectorizer, booleanMatrix)
+# def boolean_search(query):
+#     return query_search(query, vectorizer, booleanMatrix)

@@ -55,9 +55,9 @@ def neural_search(query, model, embeddings, df):
     sorted_indices = np.argsort(similarities)[::-1]  # Sort in descending order
     return sorted_indices
 
-df = load_data()
-df = clean_text(df)
-model, neuralMatrix = vectorize_data(df)
+# df = load_data()
+# df = clean_text(df)
+# model, neuralMatrix = vectorize_data(df)
 
-def query_search(query):
-    return neural_search(query, model, neuralMatrix, df)
+# def query_search(query):
+#     return neural_search(query, model, neuralMatrix, df)

@@ -78,9 +78,9 @@ def search_query(query, df, vectorizer, tfidfMatrix):
     
     return sortedIndices
 
-df = load_data()
-df = clean_text(df)
-vectorizer, tfidfMatrix = vectorize_data(df)
+# df = load_data()
+# df = clean_text(df)
+# vectorizer, tfidfMatrix = vectorize_data(df)
 
-def site_search(query):
-    return search_query(query, df, vectorizer, tfidfMatrix)
+# def site_search(query):
+#     return search_query(query, df, vectorizer, tfidfMatrix)

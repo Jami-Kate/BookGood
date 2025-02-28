@@ -5,9 +5,10 @@ from engine.createImage import create_image
 from engine.plotPie import plot_pie
 from engine.getMood import get_mood, next_mood_batch, first_mood_batch
 from engine.bookRetrieval import *
-from engine.tfidfSearchEngine import site_search, df, correct_query
-from engine.booleanSearchEngine import boolean_search
-from engine.neuralSearchEngine import query_search
+from engine.tfidfSearchEngine import correct_query, vectorize_data as tfidf_vectorize, search_query as tfidf_search
+from engine.booleanSearchEngine import vectorize_data as b_vectorize, query_search as b_search
+from engine.neuralSearchEngine import vectorize_data as n_vectorize, neural_search as n_search
+from engine.searchHelpers import load_data, clean_text
 from threading import Thread
 from time import sleep
 
@@ -76,12 +77,21 @@ def search():
     query = correct_query(query)
     search_type = request.args.get('search_type') 
 
+    df = load_data()
+    df = clean_text(df)
+
     if search_type == "tfidf":
-        sortedIndices = site_search(query)  # TF-IDF search function
+        vectorizer, tfidfMatrix = tfidf_vectorize(df)
+        sortedIndices = tfidf_search(query, df, vectorizer, tfidfMatrix)
+        # sortedIndices = site_search(query)  # TF-IDF search function
     elif search_type == "neural":
-        sortedIndices = query_search(query) # neural search 
+        model, embeddings = n_vectorize(df)
+        sortedIndices = n_search(query, model, embeddings, df)
+        # sortedIndices = query_search(query) # neural search 
     else:
-        sortedIndices = boolean_search(query)  # Boolean search function
+        vectorizer, booleanMatrix = b_vectorize(df)
+        sortedIndices = b_search(query, vectorizer, booleanMatrix)
+        # sortedIndices = boolean_search(query)  # Boolean search function
 
     if not os.path.exists("static/data/data.json"):
         msg = 'give me a second'
