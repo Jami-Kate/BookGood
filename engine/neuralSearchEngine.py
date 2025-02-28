@@ -1,30 +1,7 @@
-import pandas as pd
 import numpy as np
-import json
 import torch.nn.functional as F
-from nltk.corpus import stopwords
-from nltk.tokenize import word_tokenize
-from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from sentence_transformers import SentenceTransformer
-
-def load_data(filepath="static/data/data.json"):
-    with open(filepath,'r') as f:
-        data = json.load(f)
-
-    data = data['books']
-    data = [item for item in data if isinstance(item, dict) and item]
-    df = pd.DataFrame(data)
-    df['text'] = df['review']
-    return df
-
-def clean_text(df):
-    """Removes stopwords from the text column."""
-    stopwordsList = set(stopwords.words("english"))
-    lemmatizer = WordNetLemmatizer()
-    df["text"] = df["text"].apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in word_tokenize(str(x)) 
-                                                      if word.isalpha() and word not in stopwordsList]))
-    return df
 
 
 def get_sentence_embeddings(sentences, model):
@@ -54,10 +31,3 @@ def neural_search(query, model, embeddings, df):
 
     sorted_indices = np.argsort(similarities)[::-1]  # Sort in descending order
     return sorted_indices
-
-# df = load_data()
-# df = clean_text(df)
-# model, neuralMatrix = vectorize_data(df)
-
-# def query_search(query):
-#     return neural_search(query, model, neuralMatrix, df)

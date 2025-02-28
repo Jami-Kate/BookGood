@@ -5,26 +5,7 @@ from nltk.stem import WordNetLemmatizer
 from sklearn.metrics.pairwise import cosine_similarity
 from transformers import T5ForConditionalGeneration, AutoTokenizer
 import numpy as np
-import pandas as pd
-import json
 
-def load_data(filepath="static/data/data.json"):
-    with open(filepath,'r') as f:
-        data = json.load(f)
-
-    data = data['books']
-    data = [item for item in data if isinstance(item, dict) and item]
-    df = pd.DataFrame(data)
-    df['text'] = df['review']
-    return df
-
-def clean_text(df):
-    """Removes stopwords from the text column."""
-    stopwordsList = set(stopwords.words("english"))
-    lemmatizer = WordNetLemmatizer()
-    df["text"] = df["text"].apply(lambda x: ' '.join([lemmatizer.lemmatize(word) for word in word_tokenize(str(x)) 
-                                                      if word.isalpha() and word not in stopwordsList]))
-    return df
 
 def vectorize_data(df):
     """Converts text into TF-IDF vectors using the same vectorizer for title and text."""
@@ -77,10 +58,3 @@ def search_query(query, df, vectorizer, tfidfMatrix):
         return
     
     return sortedIndices
-
-# df = load_data()
-# df = clean_text(df)
-# vectorizer, tfidfMatrix = vectorize_data(df)
-
-# def site_search(query):
-#     return search_query(query, df, vectorizer, tfidfMatrix)
