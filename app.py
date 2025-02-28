@@ -108,8 +108,8 @@ def display_book(id):
     # Open books json file
 
     # Halt execution if data.json has been deleted and wait for it to come back
-    while not os.path.exists("static/data/links.json"):
-        sleep(.5)
+    while not os.path.exists("static/data/data.json"):
+        sleep(.2)
 
     with open('static/data/data.json','r') as f:
         books = json.load(f)
@@ -117,7 +117,9 @@ def display_book(id):
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
-    book = next((book for book in books if book['id'] == id), 'None')    
+    book = next((book for book in books if book['id'] == id), 'None')   
+    print(id) 
+    print(book)
     # Runs get_mood on a book if its mood hasn't already been filled in
     if book['mood'] == None:
         book['mood'] = get_mood(book['review'])
