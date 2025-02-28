@@ -63,7 +63,7 @@ def first_mood_batch(incr = 15):
             book['mood'] = get_mood(book['review'])
     
     data = {'metadata': meta, 'books': books}
-    os.remove(f)
+    # os.remove(f)
     file = open(f, 'w')
     json.dump(data, file, indent = 4)
     return end_ind
@@ -86,7 +86,7 @@ def next_mood_batch(ind, incr = 15):
 
     
     data = {'metadata': meta, 'books' : books}
-    os.remove(f)
+    # os.remove(f)
     file = open(f, 'w')
     json.dump(data, file, indent = 4)
 

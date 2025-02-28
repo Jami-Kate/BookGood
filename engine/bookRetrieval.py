@@ -34,8 +34,8 @@ def book_links():
         links.append('https://www.bookreporter.com' + link)
     
     '''If the link file already exists b/c of old runs, delete it'''
-    if os.path.exists("static/data/links.json"):
-        os.remove("static/data/links.json")
+    # if os.path.exists("static/data/links.json"):
+    #     os.remove("static/data/links.json")
     
     '''Store the links in the links.json file'''
     file = open('static/data/links.json','w')
@@ -95,7 +95,7 @@ def dumpToJSON(dataIn, metaIn):
         #store the sum of old & new info in dataOut
         dataOut = {'metadata': metaIn, 'books': bookHolder}
         #then deletes the old file
-        os.remove("static/data/data.json")
+        # os.remove("static/data/data.json")
         
     else:
         #ie if this is the first retrieval
@@ -128,15 +128,15 @@ def first_retrieval():
         ind += 1
 
     #delete old json
-    if os.path.exists("static/data/data.json"):
-        os.remove("static/data/data.json")
+    # if os.path.exists("static/data/data.json"):
+    #     os.remove("static/data/data.json")
     
     #write the data to the JSON
     dumpToJSON(bookDets, metaOut)
 
     #deletes old JSON to update with the new pointer
-    if os.path.exists("static/data/links.json"):
-        os.remove("static/data/links.json")
+    # if os.path.exists("static/data/links.json"):
+    #     os.remove("static/data/links.json")
     
     #rewrites with pointer
     file = open('static/data/links.json','w')
@@ -181,8 +181,8 @@ def retrieve_more():
     dumpToJSON(bookDets, metaOut)
 
     #update the pointer in links
-    if os.path.exists("static/data/links.json"):
-        os.remove("static/data/links.json")
+    # if os.path.exists("static/data/links.json"):
+    #     os.remove("static/data/links.json")
     file = open('static/data/links.json','w')
     json.dump({"pointer": ind, "links": info}, file, indent = 4)
 
