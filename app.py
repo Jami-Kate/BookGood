@@ -51,7 +51,7 @@ def check_data():
 
         # Delete old json files
         if os.path.exists("static/data/links.json"):
-            os.remove("static/data/links.json")
+          os.remove("static/data/links.json")
         #if os.path.exists("static/data/data.json"): # commented this out for now because the search engine breaks otherwise ; FIX LATER
         #    os.remove("static/data/data.json")
 

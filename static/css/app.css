@@ -113,6 +113,12 @@ h2 {
     font-weight: 600;
 }
 
+h7 {
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+}
+
 .genres {
     background-color: #435c2b;
     border-radius: 5px;
