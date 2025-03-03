@@ -97,7 +97,7 @@ def search():
         msg = 'give me a second'
         return redirect(url_for('home', msg=msg))
 
-    if sortedIndices.size == 0:  # Check if the array is empty
+    if not sortedIndices:  # Check if the array is empty
         msg = f'weh woh nothing found for "{query}"'
         return redirect(url_for('home', msg=msg))
 
@@ -107,7 +107,7 @@ def search():
         fig, genrePie = plot_pie(df, sortedIndices)
         img64 = create_image(fig, genrePie)
     except:
-        msg = f'weh woh nothing found for "{query}"'
+        msg = f'weh woh something went wrong with "{query}"'
         return redirect(url_for('home', msg=msg))
 
     return render_template('results.html', query=query, results=results, plot=img64, resultsNumber=resultsNumber)
