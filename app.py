@@ -50,10 +50,10 @@ def check_data():
         global mood_status
 
         # Delete old json files
-        # if os.path.exists("static/data/links.json"):
-        #   os.remove("static/data/links.json")
-        #if os.path.exists("static/data/data.json"): # commented this out for now because the search engine breaks otherwise ; FIX LATER
-        #    os.remove("static/data/data.json")
+        if os.path.exists("static/data/links.json"):
+          os.remove("static/data/links.json")
+        if os.path.exists("static/data/data.json"):
+           os.remove("static/data/data.json")
 
         t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
         t.start()
