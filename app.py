@@ -59,6 +59,11 @@ def check_data():
         t.start()
     else:
         print(f'{book_status} books loaded; {mood_status} moods loaded')
+        # if os.path.exists("static/data/data.json"):
+        #     with open('static/data/data.json', 'r') as data:
+        #         books = json.load(data)
+        #         books = data['books']
+        #     print(f'books: {len(books)}')
 
 @app.route('/') # Gets you to homepage
 def home():
@@ -67,6 +72,10 @@ def home():
 
 @app.route('/search')  # Perform search and load results
 def search():
+
+    if not os.path.exists("static/data/data.json"):
+        msg = 'give me a second'
+        return redirect(url_for('home', msg=msg))
     
     query = request.args.get('query', '').strip()  
 
@@ -93,11 +102,10 @@ def search():
         sortedIndices = b_search(query, vectorizer, booleanMatrix)
         # sortedIndices = boolean_search(query)  # Boolean search function
 
-    if not os.path.exists("static/data/data.json"):
-        msg = 'give me a second'
-        return redirect(url_for('home', msg=msg))
+
 
     if not sortedIndices:  # Check if the array is empty
+        print(sortedIndices)
         msg = f'weh woh nothing found for "{query}"'
         return redirect(url_for('home', msg=msg))
 
