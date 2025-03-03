@@ -102,10 +102,9 @@ def search():
         sortedIndices = b_search(query, vectorizer, booleanMatrix)
         # sortedIndices = boolean_search(query)  # Boolean search function
 
+    print(f'results: {sortedIndices}')
 
-
-    if not sortedIndices:  # Check if the array is empty
-        print(sortedIndices)
+    if len(sortedIndices) == 0:  # Check if the array is empty
         msg = f'weh woh nothing found for "{query}"'
         return redirect(url_for('home', msg=msg))
 

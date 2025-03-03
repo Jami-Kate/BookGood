@@ -55,6 +55,6 @@ def search_query(query, df, vectorizer, tfidfMatrix):
 
     if len(sortedIndices) == 0:
         print(f"No matching results found for '{query}'.\n")
-        return
+        return []
     
     return sortedIndices
