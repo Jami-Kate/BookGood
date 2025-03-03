@@ -42,6 +42,6 @@ def query_search(query, vectorizer, booleanMatrix):
 
     if len(matchingIndices) == 0:
         print(f"No matching results found for '{query}'.\n")
-        return []
+        return
 
     return matchingIndices
