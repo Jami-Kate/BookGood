@@ -7,9 +7,7 @@ import json
 
 def get_mood(text, n = 5):
 
-    roberta = "SamLowe/roberta-base-go_emotions"
-
-    my_model = roberta
+    my_model = "SamLowe/roberta-base-go_emotions"
 
     tokenizer = AutoTokenizer.from_pretrained(my_model)
     pipe = pipeline("text-classification", model = my_model, top_k = None)
@@ -43,15 +41,14 @@ def get_mood(text, n = 5):
         chunk_result =  {dic["label"]: dic["score"] for dic in chunk_result if dic["label"] != "neutral"}
         results.append(chunk_result)
 
-
     json_text = pd.DataFrame(results).mean().to_json()
     final_score = json.loads(json_text)
     return dict(list(final_score.items())[:n])
 
 def first_mood_batch(incr = 15):
     f = 'static/data/data.json'
-    file = open(f)
-    data = json.load(file)
+    with open(f, 'r') as file:
+        data = json.load(file)
     meta = data['metadata']
     books = data['books']
 
@@ -62,16 +59,14 @@ def first_mood_batch(incr = 15):
             book['mood'] = get_mood(book['review'])
     
     data = {'metadata': meta, 'books': books}
-    # os.remove(f)
-    file = open(f, 'w')
-    json.dump(data, file, indent = 4)
+    with open(f, 'w') as file:
+        json.dump(data, file, indent = 4)
     return end_ind
-
 
 def next_mood_batch(ind, incr = 15):
     f = 'static/data/data.json'
-    file = open(f)
-    data = json.load(file)
+    with open(f, 'r') as file:
+        data = json.load(file)
     meta = data['metadata']
     books = data['books']
 
@@ -82,11 +77,8 @@ def next_mood_batch(ind, incr = 15):
     for book in books[ind:end_ind]:
         if not book['mood']:
             book['mood'] = get_mood(book['review'])
-
     
     data = {'metadata': meta, 'books' : books}
-    # os.remove(f)
-    file = open(f, 'w')
-    json.dump(data, file, indent = 4)
-
+    with open(f, 'w') as file:
+        json.dump(data, file, indent = 4)
     return end_ind
