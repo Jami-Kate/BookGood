@@ -97,7 +97,7 @@ def search():
         msg = 'give me a second'
         return redirect(url_for('home', msg=msg))
 
-    if len(sortedIndices) == 0:  # Check if the array is empty
+    if not sortedIndices:  # Check if the array is empty
         msg = f'weh woh nothing found for "{query}"'
         return redirect(url_for('home', msg=msg))
 
