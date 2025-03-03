@@ -6,7 +6,6 @@ import os
 import json
 
 def get_mood(text, n = 5):
-    savani = "bhadresh-savani/distilbert-base-uncased-emotion"
 
     roberta = "SamLowe/roberta-base-go_emotions"
 
