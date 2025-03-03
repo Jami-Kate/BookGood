@@ -38,10 +38,13 @@ def book_links():
     #     os.remove("static/data/links.json")
     
     '''Store the links in the links.json file'''
-    file = open('static/data/links.json','w')
-
-    '''Stores the links in "links" and a helper "pointer" for which books have already been retrieved'''
-    json.dump({"pointer": 0, "links": links}, file, indent = 4)
+    link_file = open('static/data/links.json','w')
+    json.dump({"pointer": 0, "links": links}, link_file, indent = 4)
+    # file = 'static/data/links.json'
+    # with open(file, 'w') as link_file:
+    #     '''Stores the links in "links" and a helper "pointer" for which books have already been retrieved'''
+    #     json.dump({"pointer": 0, "links": links}, link_file, indent = 4)
+    link_file.close()
     return 
 
 
@@ -86,8 +89,10 @@ def dumpToJSON(dataIn, metaIn):
     '''if the file already exists and has data, removes that data and stores it
        then it deletes the JSON to put in new data'''
     if os.path.exists("static/data/data.json"):
-        f = open('static/data/data.json')
-        dataOut = json.load(f)
+        # f = open('static/data/data.json')
+        f = 'static/data/data.json'
+        with open(f, 'r') as data_file:
+            dataOut = json.load(data_file)
         #adds new books to the books section one-by-one
         bookHolder = dataOut['books']
         for boo in dataIn:
@@ -102,8 +107,10 @@ def dumpToJSON(dataIn, metaIn):
         dataOut = {'metadata': metaIn, 'books': dataIn}
     
     #write to the file
-    file = open('static/data/data.json','w')
-    json.dump(dataOut, file, indent = 4)
+    # file = open('static/data/data.json','w')
+    file = 'static/data/data.json'
+    with open(file, 'w') as data_file:
+        json.dump(dataOut, data_file, indent = 4)
 
 '''to be called when the website first opens; deletes old json file, gets first 30 books' details to dump to JSON''' 
 def first_retrieval():
@@ -113,7 +120,11 @@ def first_retrieval():
 
     #retrieves the links
     f = open('static/data/links.json')
+    # f = 'static/data/data.json'
+    # with open(f, 'r'):
+    #     data = json.load(f)
     data = json.load(f)
+    f.close()
     info = data['links']
     ind = data['pointer']
 
@@ -148,14 +159,18 @@ def first_retrieval():
    retrieves 30 more books' details '''
 def retrieve_more():
     #retrieve links & pointer for location in book scraping
-    f = open('static/data/links.json')
-    data = json.load(f)
+    # f = open('static/data/links.json')
+    f = 'static/data/links.json'
+    with open(f, 'r') as link_file:
+        data = json.load(link_file)
     info = data['links']
     ind = data['pointer']
 
     #open the data file to recieve the list of genres thus far
-    fData = open('static/data/data.json')
-    fData = json.load(fData)
+    # fData = open('static/data/data.json')
+    f = 'static/data/data.json'
+    with open(f, 'r') as book_data:
+        fData = json.load(book_data)
     metaOut = fData['metadata']
 
     #stop when we're at 30 books more
@@ -183,8 +198,10 @@ def retrieve_more():
     #update the pointer in links
     # if os.path.exists("static/data/links.json"):
     #     os.remove("static/data/links.json")
-    file = open('static/data/links.json','w')
-    json.dump({"pointer": ind, "links": info}, file, indent = 4)
+    # file = open('static/data/links.json','w')
+    file = 'static/data/links.json'
+    with open(file, 'w') as link_file:
+        json.dump({"pointer": ind, "links": info}, link_file, indent = 4)
 
     return ind
 
