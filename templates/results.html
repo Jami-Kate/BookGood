@@ -6,15 +6,64 @@ Results for {{query}}
 {% endblock %}
 
 {% block content %} 
-<button onclick="location.href = '{{ url_for('home') }}';" class = "backButton">Back to Search</button>
     {% if results %}
-    <h2 class="mb-3">The distribution of genres for '{{query}}'</h2>
-    <div class="row row-col-4">
-      <img src="data:image/png;base64,{{ plot }}" 
-      alt="Plot"
-      style="width: 500px; height: 100%"
-      align="right"> 
-      <h3>Results for '{{query}}'</h3>
+    <div class = "row" style = "margin-top: 1%;">
+      <div class = "col-sm-1">
+          <button onclick="window.history.back()" class = "backButton">Back</button>
+      </div>
+
+      <div class = "col-sm-5">
+        <h2 class="mb-3">The distribution of genres for '{{query}}'</h2>
+      </div>
+      <div class = "col-sm-6">
+        <h2>Results for '{{query}}'</h2>
+        <h7>Number of search results: {{resultsNumber}}</h7>
+      </div>
+  </div>
+    <div class = "row" style = "margin-top: 1%;">
+      <div class = "col-sm-5">
+        <img src="data:image/png;base64,{{ plot }}" 
+        alt="Plot"
+        style="width: 100%; height: auto"
+        align="right"> 
+      </div>
+      <div class = "col-sm-1"></div>
+        {% for result in results %}
+        <div class="col-3">
+          <div class = "cardCarrier ratio" style="--bs-aspect-ratio: 150%;">
+          <div class = "bookCard">
+            <div class = "bookCardMain">
+              <div class = "bookCardInner d-flex justify-content-between flex-column">
+                <h4 class="bookCardTitle d-flex text-center justify-content-center">{{ result['title'] }}</h5>
+                <h5 class="bookCardAuthor d-flex justify-content-center">{{ result['author'] }}</h5>
+                <div class = "d-flex justify-content-evenly bookCardGenreList">
+                  {% for genre in result['genres'] %}
+                  <!--{% if loop.index <= 2 %}-->
+                  <li class="d-flex justify-content-center">
+                    <a href="{{ url_for('display_genres', genre=genre) }}" class="bookCardLink">{{ genre }}</a>
+                    <div class="bookCardGenreItem"></div>
+                </li>
+                
+                    
+                  <!--{% endif %}-->
+                  {% endfor %}
+  
+                </div>
+               
+                <p class="bookCardText">{{ result['review'][:200] + '...' }}</p>
+                <div class= "d-flex justify-content-center">
+                  <a href="{{ url_for('display_book', id=result['id']) }}" class="bookCardLink">See more</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        {% endfor %}
+      </div>
+
+    </div>
+    <!--
     {% for result in results %}
     <div class="col mb-4">
         <div class="card h-100" style="width: 18rem;">
@@ -32,6 +81,7 @@ Results for {{query}}
     </div>
 
     {% endfor %}
+    -->  
     </div>
         
     {% else %}

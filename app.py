@@ -6,9 +6,12 @@ from engine.createImage import create_image
 from engine.plotPie import plot_pie
 from engine.getMood import get_mood, next_mood_batch, first_mood_batch
 from engine.bookRetrieval import *
-from engine.tfidfSearchEngine import load_data, clean_text, vectorize_data, search_query
+from engine.tfidfSearchEngine import correct_query, vectorize_data as tfidf_vectorize, search_query as tfidf_search
+from engine.booleanSearchEngine import vectorize_data as b_vectorize, query_search as b_search
+from engine.neuralSearchEngine import vectorize_data as n_vectorize, neural_search as n_search
+from engine.searchHelpers import load_data, clean_text
 from threading import Thread
-import time
+from time import sleep
 
 app = Flask(__name__, static_url_path='/static')
 
@@ -48,9 +51,9 @@ def check_data():
 
         # Delete old json files
         if os.path.exists("static/data/links.json"):
-            os.remove("static/data/links.json")
+          os.remove("static/data/links.json")
         if os.path.exists("static/data/data.json"):
-            os.remove("static/data/data.json")
+           os.remove("static/data/data.json")
 
         pool = concurrent.futures.ThreadPoolExecutor(max_workers=3)
         
@@ -67,45 +70,86 @@ def check_data():
         pool.submit(load_moods)
     else:
         print(f'{book_status} books loaded; {mood_status} moods loaded')
+        # if os.path.exists("static/data/data.json"):
+        #     with open('static/data/data.json', 'r') as data:
+        #         books = json.load(data)
+        #         books = data['books']
+        #     print(f'books: {len(books)}')
 
 @app.route('/') # Gets you to homepage
 def home():
     msg = request.args.get('msg')
     return render_template('index.html', msg = msg)
 
-@app.route('/tfidf') # Perform TF/IDF search and load results
+@app.route('/search')  # Perform search and load results
 def search():
-    query = request.args.get('tf-idf-query')
-    if not query:
+
+    if not os.path.exists("static/data/data.json"):
+        msg = 'give me a second'
+        return redirect(url_for('home', msg=msg))
+    
+    query = request.args.get('query', '').strip()  
+
+    if not query:  
         msg = 'cmon you gotta enter something'
-        return redirect(url_for('home', msg = msg))
-    print(query)
+        return redirect(url_for('home', msg=msg))
+
+    query = correct_query(query)
+    search_type = request.args.get('search_type') 
+
     df = load_data()
     df = clean_text(df)
-    vectorizer, tfidfMatrix = vectorize_data(df)
-    sortedIndices = search_query(query, df, vectorizer, tfidfMatrix)
+
+    if search_type == "tfidf":
+        vectorizer, tfidfMatrix = tfidf_vectorize(df)
+        sortedIndices = tfidf_search(query, df, vectorizer, tfidfMatrix)
+        # sortedIndices = site_search(query)  # TF-IDF search function
+    elif search_type == "neural":
+        model, embeddings = n_vectorize(df)
+        sortedIndices = n_search(query, model, embeddings, df)
+        # sortedIndices = query_search(query) # neural search 
+    else:
+        vectorizer, booleanMatrix = b_vectorize(df)
+        sortedIndices = b_search(query, vectorizer, booleanMatrix)
+        # sortedIndices = boolean_search(query)  # Boolean search function
+
+    print(f'results: {sortedIndices}')
+
+    if len(sortedIndices) == 0:  # Check if the array is empty
+        msg = f'weh woh nothing found for "{query}"'
+        return redirect(url_for('home', msg=msg))
+
     try:
         results = [df.iloc[idx] for idx in sortedIndices]
+        resultsNumber = len(results)
         fig, genrePie = plot_pie(df, sortedIndices)
         img64 = create_image(fig, genrePie)
     except:
-        msg = f'weh woh nothing found for {query}'
-        return redirect(url_for('home', msg = msg))
-    return render_template('results.html', query = query, results = results, plot = img64)
+        msg = f'weh woh something went wrong with "{query}"'
+        return redirect(url_for('home', msg=msg))
+
+    return render_template('results.html', query=query, results=results, plot=img64, resultsNumber=resultsNumber)
+
 
 @app.route('/book/<id>') # Show particular book
 def display_book(id):
     # Open books json file
+
+    # Halt execution if data.json has been deleted and wait for it to come back
+    while not os.path.exists("static/data/data.json"):
+        sleep(.2)
+
     with open('static/data/data.json','r') as f:
         books = json.load(f)
-        books = books['books']
+    books = books['books']
     # Convert id from url to int (don't ask me how long it took me to figure out it was actually a string)
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
-    book = next((book for book in books if book['id'] == id), 'None')    
-
+    book = next((book for book in books if book['id'] == id), 'None')   
+    print(id) 
+    print(book)
     # Runs get_mood on a book if its mood hasn't already been filled in
-    if 'mood' not in book.keys():
+    if book['mood'] == None:
         book['mood'] = get_mood(book['review'])
 
     mood_fig, mood_img = plot_moods(book['mood'])
@@ -119,7 +163,7 @@ def about():
     
 @app.route("/genres/<genre>")
 def display_genres(genre):
-    with open('./data/data.json','r') as f:
+    with open('static/data/data.json','r') as f:
         books = json.load(f)
         books = books['books']
     queryGenres = [book for book in books if genre in book['genres']]

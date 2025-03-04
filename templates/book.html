@@ -4,25 +4,46 @@
 {% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>
-        {{book['title']}}
-    </h1>
-    <h2>
-        {{book['author']}}
-    </h2>
-    <img src="data:image/png;base64,{{ mood }}" alt="Plot"> 
-    <ul class="list-group list-group-horizontal">
-        {% for genre in book['genres'] %}
-        <li class="list-group-item">
-            <a href="{{ url_for('display_genres', genre=genre) }}" class="">{{ genre }}</a>
-        </li>
-        {% endfor %}
-    </ul>
-    <p>
-        {{book['review']}}
-    </p>
-    <button onclick="window.history.back()">back</button>
+<div class="container pageWide">
+    <div class = "row" style = "margin-top: 1%;">
+        <div class = "col-sm-5">
+            <button onclick="window.history.back()" class = "backButton">Back</button>
+        </div>
+
+        <div class = "col">
+            <h1 class = "d-flex justify-content-center">
+                {{book['title']}}
+            </h1>
+        </div>
+    </div>
+    <div class = "row">
+        <div class = "col-sm-5">
+            <img src="data:image/png;base64,{{ mood }}" alt="Plot" class = "fitPlot"> 
+
+            <h2 class = "d-flex justify-content-center">Genres</h2>
+            <ul class="list-group list-group-horizontal d-flex justify-content-center">
+                {% for genre in book['genres'] %}
+                <li class="list-group-item genreBox">
+                    <a href="{{ url_for('display_genres', genre=genre) }}" class="genres">{{ genre }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+        <div class = "col">
+            <h2 class = "d-flex justify-content-center">
+                {{book['author']}}
+            </h2>
+
+            <p>
+                {{book['review']}}
+            </p>
+
+
+        </div>
+
+    </div>
 </div>
 
     {% endblock %}

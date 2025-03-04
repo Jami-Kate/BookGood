@@ -1,0 +1,7 @@
+safetensor 
+matplotlib
+nltk 
+transformers
+flask
+scikit-learn
+torch

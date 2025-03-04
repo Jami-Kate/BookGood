@@ -1,4 +1,4 @@
 .DS_Store
 wikidata2.txt
-static/data/
-
+static/data/data.json
+static/data/links.json
