@@ -8,8 +8,13 @@ import sys
 
 def book_links():
     '''Initial link pages'''
+    headers = {
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/86.0.4240.75 Safari/537.36',
+    'Referer': 'https://www.bookreporter.com/coming-soon',
+    'Accept-Language': 'en-US,en;q=0.9'} # to pass the turing test
+
     url = f'https://www.bookreporter.com/coming-soon'
-    response = requests.get(url)
+    response = requests.get(url, headers=headers, timeout=10)
     soup = BeautifulSoup(response.content, 'html.parser')
 
     linksTemp = soup.find_all('div', class_ = 'book-info')
@@ -33,27 +38,21 @@ def book_links():
         link = linkTemp['href']
         links.append('https://www.bookreporter.com' + link)
     
-    '''If the link file already exists b/c of old runs, delete it'''
-    # if os.path.exists("static/data/links.json"):
-    #     os.remove("static/data/links.json")
-    
     '''Store the links in the links.json file'''
-    link_file = open('static/data/links.json','w')
-    json.dump({"pointer": 0, "links": links}, link_file, indent = 4)
-    # file = 'static/data/links.json'
-    # with open(file, 'w') as link_file:
-    #     '''Stores the links in "links" and a helper "pointer" for which books have already been retrieved'''
-    #     json.dump({"pointer": 0, "links": links}, link_file, indent = 4)
-    link_file.close()
+    if links:
+        with open('static/data/links.json', 'w') as link_file:
+            json.dump({"pointer": 0, "links": links}, link_file, indent=4)
+        print(f"Successfully fetched {len(links)} book links!")
+    else:
+        print("No links found.")
     return 
-
 
 
 '''Given a url to a book, retrieves the details of that book'''
 def get_book(book_url):
 
     '''runs beautiful soup on the url'''
-    response = requests.get(book_url)
+    response = requests.get(book_url, verify=False) 
     soup = BeautifulSoup(response.content, 'html.parser')
     
     '''retrieves the relevant details'''
@@ -99,8 +98,6 @@ def dumpToJSON(dataIn, metaIn):
             bookHolder.append(boo)
         #store the sum of old & new info in dataOut
         dataOut = {'metadata': metaIn, 'books': bookHolder}
-        #then deletes the old file
-        # os.remove("static/data/data.json")
         
     else:
         #ie if this is the first retrieval
@@ -120,9 +117,6 @@ def first_retrieval():
 
     #retrieves the links
     f = open('static/data/links.json')
-    # f = 'static/data/data.json'
-    # with open(f, 'r'):
-    #     data = json.load(f)
     data = json.load(f)
     f.close()
     info = data['links']
@@ -144,10 +138,6 @@ def first_retrieval():
     
     #write the data to the JSON
     dumpToJSON(bookDets, metaOut)
-
-    #deletes old JSON to update with the new pointer
-    # if os.path.exists("static/data/links.json"):
-    #     os.remove("static/data/links.json")
     
     #rewrites with pointer
     file = open('static/data/links.json','w')
@@ -196,12 +186,8 @@ def retrieve_more():
     dumpToJSON(bookDets, metaOut)
 
     #update the pointer in links
-    # if os.path.exists("static/data/links.json"):
-    #     os.remove("static/data/links.json")
-    # file = open('static/data/links.json','w')
     file = 'static/data/links.json'
     with open(file, 'w') as link_file:
         json.dump({"pointer": ind, "links": info}, link_file, indent = 4)
 
     return ind
-

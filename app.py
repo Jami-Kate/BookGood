@@ -43,27 +43,61 @@ def load_json():
 @app.before_request
 def check_data():
     global starting_up
-    if starting_up: 
+    if starting_up:
         starting_up = False
 
         global book_status
         global mood_status
 
-        # Delete old json files
-        if os.path.exists("static/data/links.json"):
-          os.remove("static/data/links.json")
-        if os.path.exists("static/data/data.json"):
-           os.remove("static/data/data.json")
+        # Check if data.json file exists
+        if not os.path.exists("static/data/data.json"):
+            print('Data file not found, loading books and moods...')
+            load_json()  # Load data only if it doesn't exist
+        else:
+            print('Data file found, skipping loading.')
 
-        t = Thread(target = load_json) # Silos loading of data.json into its own thread so the rest of the app can load; @TODO: create another thread for moods
-        t.start()
-    else:
-        print(f'{book_status} books loaded; {mood_status} moods loaded')
-        # if os.path.exists("static/data/data.json"):
-        #     with open('static/data/data.json', 'r') as data:
-        #         books = json.load(data)
-        #         books = data['books']
-        #     print(f'books: {len(books)}')
+        # Check if books are loaded and process them
+        with open("static/data/data.json", "r") as f:
+            data = json.load(f)
+            if "books" in data and len(data["books"]) >= 150:
+                print("Books already loaded, skipping retrieval.")
+                book_status = 150 
+            else:
+                print('Loading books...')
+                book_status = first_retrieval()  
+
+        while book_status: 
+            book_status = retrieve_more()  
+        book_status = 150  
+        print('Books loaded')
+
+        # Check if moods are loaded and process them
+        if os.path.exists("static/data/data.json"):
+            with open("static/data/data.json", "r") as f:
+                mood_data = json.load(f)
+
+            books = mood_data.get("books", [])
+            mood_status = 0
+
+            # Check if all books have moods
+            for book in books:
+                if "mood" not in book or not book["mood"]:
+                    mood_status = 1  # Some books are missing moods, need to retrieve
+                    break
+
+            if mood_status == 0:  # If all books have moods, skip retrieval
+                print("Moods already loaded, skipping retrieval.")
+            else:
+                print("Some moods missing, starting retrieval...")
+                mood_status = first_mood_batch()
+
+                # Only run next_mood_batch if moods are missing
+                while mood_status:
+                    mood_status = next_mood_batch(mood_status)
+                print('Moods loaded')
+        else:
+            print(f'{book_status} books loaded; {mood_status} moods loaded')
+
 
 @app.route('/') # Gets you to homepage
 def home():

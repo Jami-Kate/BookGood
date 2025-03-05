@@ -63,22 +63,27 @@ def first_mood_batch(incr = 15):
         json.dump(data, file, indent = 4)
     return end_ind
 
-def next_mood_batch(ind, incr = 15):
-    f = 'static/data/data.json'
-    with open(f, 'r') as file:
-        data = json.load(file)
-    meta = data['metadata']
-    books = data['books']
-
-    end_ind = ind + incr
-
-    if ind >= 150:
-        return ind
-    for book in books[ind:end_ind]:
-        if not book['mood']:
-            book['mood'] = get_mood(book['review'])
+def next_mood_batch(ind, incr=15):
+    f = "static/data/data.json"
     
-    data = {'metadata': meta, 'books' : books}
-    with open(f, 'w') as file:
-        json.dump(data, file, indent = 4)
-    return end_ind
+    with open(f, "r") as file:
+        data = json.load(file)
+
+    meta = data["metadata"]
+    books = data["books"]
+
+    if ind >= 150:  
+        return 0
+
+    end_ind = min(ind + incr, 150)  # Ensure we don't exceed 150
+
+    # Process only books that don't have a mood
+    for book in books[ind:end_ind]:
+        if "mood" not in book or not book["mood"]:  
+            book["mood"] = get_mood(book["review"])
+
+    # Save updated data
+    with open(f, "w") as file:
+        json.dump({"metadata": meta, "books": books}, file, indent=4)
+
+    return end_ind if end_ind < 150 else 0  # Return 0 when done
