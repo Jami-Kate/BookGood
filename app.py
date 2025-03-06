@@ -86,6 +86,7 @@ def check_data():
                     break
 
             if mood_status == 0:  # If all books have moods, skip retrieval
+                mood_status = 150
                 print("Moods already loaded, skipping retrieval.")
             else:
                 print("Some moods missing, starting retrieval...")
