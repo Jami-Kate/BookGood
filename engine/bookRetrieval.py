@@ -3,8 +3,7 @@ from bs4 import BeautifulSoup
 import re
 import json
 import os
-import time
-import sys
+import hashlib
 
 def book_links():
     '''Initial link pages'''
@@ -60,8 +59,10 @@ def get_book(book_url):
     author = soup.find('div', id = 'author').find('a').text.strip()
     
     '''creates a unique integer ID based on hashed title + author'''
-    hashedTitle = hash(title + author) % ((sys.maxsize + 1) * 2)
-   
+    hashedTitle = (title + author).encode('utf-8')
+    hashedTitle = int(hashlib.sha224(hashedTitle).hexdigest(),base=16)
+
+
     '''Strips the genres down to just and array of the text of the genre'''
     category = soup.find('div', id = 'book-data').find_all(href=re.compile("/genres/"))
     i = 0

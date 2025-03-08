@@ -170,8 +170,7 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')   
-    print(id) 
-    print(book)
+
     # Runs get_mood on a book if its mood hasn't already been filled in
     if book['mood'] == None:
         book['mood'] = get_mood(book['review'])
