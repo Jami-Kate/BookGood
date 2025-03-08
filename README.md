@@ -5,6 +5,8 @@ By: Jami Biddle | Edward Delmonico | Sonja Tapio
 
 What if book... was good?
 
+Project for Building NLP Applications, Universiry of Helsinki LDA-T316
+
 ## Features
 
 ## Installation
