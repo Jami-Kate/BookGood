@@ -36,18 +36,12 @@ Results for {{query}}
               <div class = "bookCardInner d-flex justify-content-between flex-column">
                 <h4 class="bookCardTitle d-flex text-center justify-content-center">{{ result['title'] }}</h5>
                 <h5 class="bookCardAuthor d-flex justify-content-center">{{ result['author'] }}</h5>
-                <div class = "d-flex justify-content-evenly bookCardGenreList">
+                <div class = "d-flex justify-content-evenly bookCardGenreList flex-wrap">
                   {% for genre in result['genres'] %}
-                  <!--{% if loop.index <= 2 %}-->
-                  <li class="d-flex justify-content-center">
-                    <a href="{{ url_for('display_genres', genre=genre) }}" class="bookCardLink">{{ genre }}</a>
-                    <div class="bookCardGenreItem"></div>
-                </li>
-                
-                    
-                  <!--{% endif %}-->
+                    {% if loop.index <= 6 %}
+                      <div class="bookCardGenreItem"><a href="{{ url_for('display_genres', genre=genre) }}" class="bookCardLink">{{ genre }}</a></div>
+                    {% endif %}
                   {% endfor %}
-  
                 </div>
                
                 <p class="bookCardText">{{ result['review'][:200] + '...' }}</p>

@@ -8,30 +8,21 @@
     <div class = "row" style = "margin-top: 1%;">
         <div class = "col-sm-5">
             <button onclick="window.history.back()" class = "backButton">Back</button>
-        </div>
-
-        <div class = "col">
-            <h1 class = "d-flex justify-content-center">
-                {{book['title']}}
-            </h1>
-        </div>
-    </div>
-    <div class = "row">
-        <div class = "col-sm-5">
             <img src="data:image/png;base64,{{ mood }}" alt="Plot" class = "fitPlot"> 
-
             <h2 class = "d-flex justify-content-center">Genres</h2>
-            <ul class="list-group list-group-horizontal d-flex justify-content-center">
+            <ul class="list-group list-group-horizontal d-flex justify-content-center flex-wrap">
                 {% for genre in book['genres'] %}
                 <li class="list-group-item genreBox">
                     <a href="{{ url_for('display_genres', genre=genre) }}" class="genres">{{ genre }}</a>
                 </li>
                 {% endfor %}
             </ul>
-
         </div>
 
         <div class = "col">
+            <h1 class = "d-flex justify-content-center">
+                {{book['title']}}
+            </h1>
             <h2 class = "d-flex justify-content-center">
                 {{book['author']}}
             </h2>
@@ -40,10 +31,7 @@
                 {{book['review']}}
             </p>
 
-
         </div>
-
     </div>
-</div>
-
+    
     {% endblock %}

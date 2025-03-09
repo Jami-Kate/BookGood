@@ -25,9 +25,9 @@ BookGood, in its current incarnation, is not hosted remotely, and thus requires 
     3. **Complete the installation-** After all that setup, this step should be (we hope) pretty breezy. Simply run the command ```pip install -r requirements.txt``` and pip will install everything BookGood needs to run!
 
 3. **Set environment variables-** Optional, but recommended! Copy and paste the following lines into the "activate" script in your virtual environment to make tinkering and running with BookGood a tad easier.
- * ```export FLASK_DEBUG=True``` lets you run BookGood interactively-- that is, it'll restart automatically every time you change something. Can't recommend it enough.
- * ```export FLASK_APP=app.py``` tells Flask to run app.py, the protagonist (if you will) of our app, by default.
- * ```export FLASK_RUN_PORT=8000``` tells Flask to listen on port 8000.
+    * ```export FLASK_DEBUG=True``` lets you run BookGood interactively-- that is, it'll restart automatically every time you change something. Can't recommend it enough.
+    * ```export FLASK_APP=app.py``` tells Flask to run app.py, the protagonist (if you will) of our app, by default.
+    * ```export FLASK_RUN_PORT=8000``` tells Flask to listen on port 8000.
 
 4. **Try out the app-** The moment of truth! If you completed step 3 above, all you need to do is run the command ```flask run```. 
 >**Note!** The first time you start up BookGood, it's going to perform a one-time installation of the pretrained models it uses for sentiment analysis, neural search, and automatic spell-checking. Yes, there's still a little more installing to be done. We're sorry for lying to you. Fortunately, however, this requires no intervention on your part. Just grab a cup of coffee and let it run.
