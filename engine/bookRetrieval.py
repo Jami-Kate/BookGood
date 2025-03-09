@@ -110,7 +110,7 @@ def dumpToJSON(dataIn, metaIn):
     with open(file, 'w') as data_file:
         json.dump(dataOut, data_file, indent = 4)
 
-'''to be called when the website first opens; deletes old json file, gets first 30 books' details to dump to JSON''' 
+'''to be called when the website first opens; gets first 30 books' details to dump to JSON''' 
 def first_retrieval():
     #storage vars for metadata and book details to go into the JSON
     bookDets = [""] * 30
@@ -132,10 +132,6 @@ def first_retrieval():
             if gen not in metaOut['genresTotal']:
                 metaOut['genresTotal'].append(gen)
         ind += 1
-
-    #delete old json
-    # if os.path.exists("static/data/data.json"):
-    #     os.remove("static/data/data.json")
     
     #write the data to the JSON
     dumpToJSON(bookDets, metaOut)
@@ -150,7 +146,6 @@ def first_retrieval():
    retrieves 30 more books' details '''
 def retrieve_more():
     #retrieve links & pointer for location in book scraping
-    # f = open('static/data/links.json')
     f = 'static/data/links.json'
     with open(f, 'r') as link_file:
         data = json.load(link_file)
@@ -158,7 +153,6 @@ def retrieve_more():
     ind = data['pointer']
 
     #open the data file to recieve the list of genres thus far
-    # fData = open('static/data/data.json')
     f = 'static/data/data.json'
     with open(f, 'r') as book_data:
         fData = json.load(book_data)
