@@ -148,7 +148,7 @@ p {
     border-width: 0px;
 }
 
-/*CARD MAKING*/
+/*BOOK CARD MAKING*/
 
 .bookCardRows {
     max-height:12000px;
@@ -191,7 +191,9 @@ p {
 
 .bookCardTitle{
     font-weight: 600;
-    padding-top: 6px;
+    padding-top: 8px;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .bookCardAuthor{
