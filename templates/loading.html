@@ -1,0 +1,47 @@
+{% extends "layout.html" %}
+{% block title %}
+Loading...
+{% endblock %}
+
+{% block content %}
+<div class="row fillOut indexBkgrnd">
+    <div class="col-md-2"></div>
+    <div class="col-md-8 d-flex">
+        <div class="align-self-center flex-grow-1 searchBox">
+            <h1>Hello! Welcome to BookGood!</h1>
+            <p>We're currently setting things up for you. This will likely take a few minutes.</p>
+            <p>In the meantime, just sit back, relax, go grab a cup of coffee if you feel like it!</p>
+
+            <!-- Loading Spinner -->
+            <div class="d-flex justify-content-center mb-3">
+                <div class="spinner-border text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+
+            <!-- Progress Text -->
+            <p>Books loaded: <span id="bookStatus">0</span>/150</p>
+            <p>Moods loaded: <span id="moodStatus">0</span>/150</p>
+        </div>
+    </div>
+    <div class="col-md-2"></div>
+</div>
+
+<script>
+    function checkStatus() {
+        fetch("/status")
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('bookStatus').innerText = data.book_status;
+                document.getElementById('moodStatus').innerText = data.mood_status;
+
+                if (data.book_status === 150 && data.mood_status === 150) {
+                    window.location.href = '/';  // Redirect to the homepage when done
+                } else {
+                    setTimeout(checkStatus, 5000);  // Check status every 5 seconds
+                }
+            });
+    }
+    window.onload = checkStatus;
+</script>
+{% endblock %}

@@ -71,6 +71,7 @@ def next_mood_batch(ind, incr=15):
 
     meta = data["metadata"]
     books = data["books"]
+    books = [book for book in books if isinstance(book, dict)] # ensure book is a dictionary 
 
     if ind >= 150:  
         return 0
