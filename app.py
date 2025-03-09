@@ -89,6 +89,7 @@ def load_app_data():
             # Only run next_mood_batch if moods are missing
             while mood_status:
                 mood_status = next_mood_batch(mood_status)
+            mood_status = 150
             print('Moods loaded')
     else:
         print(f'{book_status} books loaded; {mood_status} moods loaded')
