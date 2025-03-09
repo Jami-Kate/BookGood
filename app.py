@@ -1,5 +1,7 @@
-from flask import Flask, render_template, redirect, request, url_for
+from flask import Flask, render_template, redirect, request, url_for, abort
 import json
+import os
+from random import choice
 from engine.plotMood import plot_moods
 from engine.createImage import create_image
 from engine.plotPie import plot_pie
@@ -170,10 +172,12 @@ def display_book(id):
     id = int(id)
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')   
-
     # Runs get_mood on a book if its mood hasn't already been filled in
-    if book['mood'] == None:
-        book['mood'] = get_mood(book['review'])
+    try:
+        if book['mood'] == None:
+            book['mood'] = get_mood(book['review'])
+    except:
+        abort(404)
 
     mood_fig, mood_img = plot_moods(book['mood'])
     mood64 = create_image(mood_fig, mood_img)
@@ -198,9 +202,10 @@ def get_status():
     statusList = {'book_status':book_status, 'mood_status':mood_status}
     return json.dumps(statusList)
 
-@app.errorhandler(404)
-def err(e):
-    return render_template('err.html', e = e)
+@app.errorhandler(Exception)
+def generic_handler(e):
+    img = choice(os.listdir('static/err_pics'))
+    return render_template('err.html', e = e, img = img)
 
 if __name__ == "__main__":
     print('watching. waiting')

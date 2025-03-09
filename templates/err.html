@@ -4,6 +4,14 @@ oh dear
 {% endblock %}
 
 {% block content %}
-something has gone amiss!
-{{e}}
+<h2>something has gone amiss!</h2>
+<img src="static/err_pics/{{ img }}" alt="" style="height:500px">
+<div>
+    {{e}}
+    {{e.message}}
+</div>
+
+
+    <a href="{{ url_for('home') }}">let's get you out of here</a>
+
     {% endblock %}
