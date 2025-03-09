@@ -11,10 +11,6 @@
     padding: 4px;
   }
 
-.testing {
-    background-color:pink;
-} 
-
 .nav-link {
     color: #fff;
     font-family: "EB Garamond", serif;
@@ -119,6 +115,12 @@ h7 {
     font-weight: 400;
 }
 
+p {
+    font-family: "EB Garamond", serif;
+    font-optical-sizing: auto;
+    font-weight: 400; 
+}
+
 .genres {
     background-color: #435c2b;
     border-radius: 5px;
@@ -149,7 +151,7 @@ h7 {
 /*CARD MAKING*/
 
 .bookCardRows {
-    height:12000px;
+    max-height:12000px;
 
 }
 
@@ -228,8 +230,13 @@ h7 {
     text-wrap: nowrap;
     margin-left: 1px;
     margin-right: 1px;
+    margin-top: 6px;
 }
 
 .bookCardGenreList {
     width: 100%;
+}
+
+.aboutFriends {
+    width: 90%;
 }
