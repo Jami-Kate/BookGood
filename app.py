@@ -173,7 +173,7 @@ def display_book(id):
     # Grab book with matching ID from database and pass to render_template
     book = next((book for book in books if book['id'] == id), 'None')   
     # Runs get_mood on a book if its mood hasn't already been filled in
-    try:
+    try: # This is in case someone messes with the url directly for some god-awful reason
         if book['mood'] == None:
             book['mood'] = get_mood(book['review'])
     except:
